@@ -1,0 +1,7 @@
+#191414 (Primary dark background)
+#121212 (Dark gray background)
+#282828 (Lighter dark gray)
+#333333 (Charcoal dark gray)
+#404040 (Light charcoal gray for text/backgrounds)
+#1a1a1a (Very dark gray for hover/active states)
+#B3B3B3 (Light gray for text contrast)
