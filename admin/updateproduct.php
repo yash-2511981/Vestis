@@ -2,7 +2,7 @@
 session_start();
 include '../db.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
     exit();
 }
@@ -14,18 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = $_POST['price'];
     $desc = $_POST['desc'];
     $category = $_POST['category'];
+    $brand = $_POST['brand'];
 
     $charpat = '/^[a-zA-Z\s]+$/';
-    $descpat = '/^[a-zA-Z\s]*\d+[a-zA-Z\s]*$/';
+    $descpat = '/^[a-zA-Z0-9\s]{1,24}$/';
     $intpat = '/^\d+$/';
 
-    if (!empty($name) && !empty($price) && !empty($desc) && !empty($category) && isset($_FILES['pimg'])) {
+    if (!empty($name) && !empty($price) && !empty($desc) && !empty($category)&& !empty($brand) && isset($_FILES['pimg'])) {
         if (!preg_match($charpat, $name)) {
             $err[] = "Enter valid name";
         }
 
         if (!preg_match($descpat, $desc)) {
-            $err[] = "Enter valid desc";
+            $err[] = "Description should be less than 24 characters";
         }
         if (!preg_match($intpat, $category)) {
             $err[] = "Enter valid category";
@@ -49,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $f_newname = uniqid('', true) . '.' . $ext;
 
                         if (move_uploaded_file($f_tmp, $upload_folder . $f_newname)) {
-                            $sql = $con->prepare("INSERT INTO product_info(name,description,price,category,img) VALUES (?,?,?,?,?)");
-                            $sql->bind_param("ssiis", $name, $desc, $price, $category, $f_newname);
+                            $sql = $con->prepare("INSERT INTO product_info(name,description,price,category,img,brand) VALUES (?,?,?,?,?,?)");
+                            $sql->bind_param("ssiisi", $name, $desc, $price, $category, $f_newname,$brand);
                             if ($sql->execute()) {
                                 header('Location:manageproduct.php');
                             } else {
@@ -176,10 +177,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                             </div>
                             <div class="form-floating mb-3 col-6">
+                                <select class="form-control" name="brand" id="brand">
+                                    <option value="">Select Brand</option>
+                                    <?php
+                                    $sql = $con->prepare("SELECT * FROM brands");
+                                    if ($sql->execute()) {
+                                        $res = $sql->get_result();
+                                        while ($row = $res->fetch_assoc()) {
+                                            echo "<option value=" . $row['id'] . ">" . $row['name'] . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-floating mb-3 col-6">
                                 <input type="file" class="form-control" name="pimg" id="pimg" accept="image/*"/>
                                 <label for="pimg">Upload Image</label>
                             </div>
-                            <div class="form-floating mb-3 col-12">
+                            <div class="form-floating mb-3 col-6">
                                 <input type="text" class="form-control" name="desc" id="desc" value="<?php echo $product['description']; ?>"/>
                                 <label for="desc">Description</label>
                             </div>

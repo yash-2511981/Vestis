@@ -8,7 +8,6 @@ include 'db.php';
 
 <head>
     <title>Title</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
         name="viewport"
@@ -25,6 +24,7 @@ include 'db.php';
     <style>
         body {
             overflow-x: hidden;
+            background-color:rgb(38, 38, 38)  ;
         }
 
         .userlogo button {
@@ -78,25 +78,52 @@ include 'db.php';
             font-weight: bolder;
             text-align: center;
             margin: 15px 0;
+            color: darkgrey;
+            text-shadow: 3px 3px 5px grey;
         }
 
         .main .product {
-            height: 300;
-            width: 230px;
+            height: 330px;
+            width: 240px;
             border: none;
-            text-align: center;
+            text-align: start;
             display: flex;
             flex-direction: column;
             align-items: center;
+            border-radius: 15px;
+            background-color: transparent;
+            word-wrap: break-word;
         }
 
         .product img {
             border-radius: 15px;
             height: 230px;
-            width: 180px;
+            width: 230px;
+            box-shadow: 0 0 60px black;
 
         }
 
+        .product span{
+            color: darkgrey;
+        }
+
+        .product #pname {
+            font-weight: bolder;
+            font-size: 17px;
+            margin: 20px 0 1px 5px;
+        }
+
+        #pname #desc {
+            font-size: 13px;
+            font-weight: normal;
+            margin: 1px 0 4px 5px;
+        }
+
+        .product #price {
+            font-weight: bold;
+            font-size: 15px;
+            margin: 1px 0 1px 5px;
+        }
 
         /* css for footer */
     </style>
@@ -110,32 +137,42 @@ include 'db.php';
                         class="img-fluid rounded" alt="" height="60px" width="60px" /></a>
                 <div class="container mx-0">
                     <div class="collapse navbar-collapse" id="collapsibleNavId">
-                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="home.php" aria-current="page">Home
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0 g-3">
+                            <li class="nav-item m-2">
+                                <a class="nav-link active" href="index.php" aria-current="page">Home
                                     <span class="visually-hidden">(current)</span></a>
                             </li>
-                            <?php
-                            if (isset($_SESSION['user'])) {
-                                echo '<li class="nav-item">
-                                <a class="nav-link" href=""></a>
-                            </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown m-2">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Categories</a>
+                                    aria-haspopup="true" aria-expanded="false">Categories</a>';
                                 <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownId">
-                                    <a class="dropdown-item" href="#">Kids</a>
+                                    <?php
+                                    $sql = $con->prepare("SELECT * FROM category");
+                                    $categories;
+                                    if ($sql->execute()) {
+                                        $categories = $sql->get_result();
+                                        while ($row = $categories->fetch_assoc()) {
+                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
+                                        }
+                                    }
+                                    ?>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown m-2">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">Brands</a>
                                 <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownId">
-                                    <a class="dropdown-item" href="#">Nike</a>
+                                    <?php
+                                    $sql = $con->prepare("SELECT * FROM brands");
+                                    if ($sql->execute()) {
+                                        $res = $sql->get_result();
+                                        while ($row = $res->fetch_assoc()) {
+                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
+                                        }
+                                    }
+                                    ?>
                                 </div>
-                            </li>';
-                            }
-                            ?>
+                            </li>
                         </ul>
                         <form class="d-flex my-2 my-lg-0">
                             <input class="form-control me-sm-2" type="text" placeholder="Search" />
@@ -171,17 +208,39 @@ include 'db.php';
             <h1>Best Deals Of The Week</h1>
 
             <div class="container products my-5">
-                <div class="row justify-content-center align-items-center g-2">
-                    <div class="col-12 col-sm-6 col-md-3 m-3">
-                        <div class="card product">
-                            <img class="card-img-top" src="images/projectImages/nvbg.jpg" alt="Title" />
+                <?php
+                $sql = "SELECT * FROM product_info LIMIT 10";
+                $res = $con->query($sql);
 
-                            <h4 class="card-title">Productname</h4>
-                            <p class="card-text">Price</p>
-                            <a href="addtocart.php"><button class="btn btn-primary">Add to Cart</button></a>
-                        </div>
-                    </div>
-                </div>
+                $count = 0;
+                echo '<div class="row justify-content-center align-items-center g-1">';
+                if ($res->num_rows > 0) {
+
+                    while ($row = $res->fetch_assoc()) {
+                        echo '<div class="col-12 col-sm-6 col-md-3 my-1">';
+                        echo '<div class="card product">';
+                        echo '<img class="card-img-top" src="./admin/productsimages/'.$row['img'].'" alt="Title" />';
+                        echo '<span id="pname">'.$row['name'].'<span id="desc">('.$row['description'].')</span></span>';
+                        echo '<span id="price">Rs.'.$row['price'].'</span>';
+                        echo '<div class="container text-center">';
+                        echo '<a href="addtocart.php?id='.$row['id'].'"><button class="btn btn-dark btn-outline-success">Add to Cart</button></a>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+
+                        $count++;
+
+                        if($count % 5 == 0){
+                            echo '</div><div class="row justify-content-center align-items-center g-2">';
+                        }
+                    }
+                }else{
+                    echo "no product found";
+                }
+
+                echo '</div>';
+
+                ?>
             </div>
         </div>
     </main>

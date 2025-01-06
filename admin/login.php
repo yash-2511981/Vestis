@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql->bind_param("s", $username);
         if ($sql->execute()) {
             $res = $sql->get_result()->fetch_assoc();
-            $_SESSION['user'] = $res['username'];
+            $_SESSION['admin'] = $res['username'];
             if ($username == $res['username'] && $pass == $res['password']) {
                 header('Location:panel.php');
             } else {

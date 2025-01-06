@@ -2,7 +2,7 @@
 session_start();
 include '../db.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
     exit();
 }

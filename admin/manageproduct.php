@@ -2,7 +2,7 @@
 session_start();
 include '../db.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
     exit();
 }
@@ -32,6 +32,7 @@ $err = [];
             height: 500px;
             display: flex;
             flex-direction: column;
+            background-color: transparent;
         }
 
         .new {
@@ -66,6 +67,7 @@ $err = [];
                                 <th scope="col">Description</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Category</th>
+                                <th scope="col">Brand</th>
                                 <th scope="col">Image</th>
                                 <th>Action</th>
                             </tr>
@@ -82,6 +84,7 @@ $err = [];
                                                 <td>" . $row['description'] . "</td>
                                                 <td>" . $row['price'] . "</td>
                                                 <td>" . $row['category'] . "</td>
+                                                <td>" . $row['brand'] . "</td>
                                                 <td>
                                                 <div class='product-img'>
                                                         <img src='./productsImages/".$row['img']."' alt='image' height='80px' width='80px'>
