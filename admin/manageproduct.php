@@ -43,6 +43,12 @@ $err = [];
         .product-img img{
             border-radius: 15px;
         }
+
+        .card-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
     </style>
 </head>
 
@@ -55,7 +61,8 @@ $err = [];
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    Manage Products
+                    <p>Manage Products</p>
+                    <p>Add Products&nbsp;<a href="insertproduct.php" class="new"><img src="../images/projectImages/svg/addp.svg" alt=""></a></p>
                 </div>
                 <div class="card-body users">
                     <h5 class="card-title">All Products</h5>
@@ -113,9 +120,6 @@ $err = [];
 
                 </div>
             </div>
-            <a href="insertproduct.php" class="new">
-                <button class="btn btn-outline-dark btn-primary">Add Product</button>
-            </a>
         </div>
     </div>
     <script

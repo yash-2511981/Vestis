@@ -82,6 +82,12 @@ include 'db.php';
             text-shadow: 3px 3px 5px grey;
         }
 
+        .products{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+
         .main .product {
             height: 330px;
             width: 240px;
@@ -97,7 +103,7 @@ include 'db.php';
 
         .product img {
             border-radius: 15px;
-            height: 230px;
+            height: 250px;
             width: 230px;
             box-shadow: 0 0 60px black;
 
@@ -209,11 +215,11 @@ include 'db.php';
 
             <div class="container products my-5">
                 <?php
-                $sql = "SELECT * FROM product_info LIMIT 10";
+                $sql = "SELECT * FROM product_info LIMIT 8";
                 $res = $con->query($sql);
 
                 $count = 0;
-                echo '<div class="row justify-content-center align-items-center g-1">';
+                echo '<div class="row justify-content-center align-items-center g-1 my-5">';
                 if ($res->num_rows > 0) {
 
                     while ($row = $res->fetch_assoc()) {
@@ -230,8 +236,8 @@ include 'db.php';
 
                         $count++;
 
-                        if($count % 5 == 0){
-                            echo '</div><div class="row justify-content-center align-items-center g-2">';
+                        if($count % 4 == 0){
+                            echo '</div><div class="row justify-content-center align-items-center g-2 my-5">';
                         }
                     }
                 }else{

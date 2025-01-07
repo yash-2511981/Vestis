@@ -88,12 +88,12 @@ if (!isset($_SESSION['admin'])) {
                                 <div>
                                     <img src="../images/projectImages/svg/category.svg" alt="Title" height="40px" width="40px" />
                                     <?php
-                                    $sql = $con->prepare("SELECT COUNT(*) AS total_users FROM user_info");
+                                    $sql = $con->prepare("SELECT COUNT(*) AS total_catgories FROM category");
                                     if ($sql->execute()) {
                                         $res = $sql->get_result();
                                         $usercount = $res->fetch_assoc();
 
-                                        echo "<span>" . $usercount['total_users'] . "</span>";
+                                        echo "<span>" . $usercount['total_catgories'] . "</span>";
                                     }
                                     ?>
                                 </div>
@@ -106,12 +106,12 @@ if (!isset($_SESSION['admin'])) {
                                 <div>
                                     <img src="../images/projectImages/svg/inventory.svg" alt="Title" height="40px" width="40px" />
                                     <?php
-                                    $sql = $con->prepare("SELECT COUNT(*) AS total_users FROM user_info");
+                                    $sql = $con->prepare("SELECT COUNT(*) AS total_products FROM product_info");
                                     if ($sql->execute()) {
                                         $res = $sql->get_result();
                                         $usercount = $res->fetch_assoc();
 
-                                        echo "<span>" . $usercount['total_users'] . "</span>";
+                                        echo "<span>" . $usercount['total_products'] . "</span>";
                                     }
                                     ?>
                                 </div>
@@ -124,13 +124,7 @@ if (!isset($_SESSION['admin'])) {
                                 <div>
                                     <img src="../images/projectImages/svg/orders.svg" alt="Title" height="40px" width="40px" />
                                     <?php
-                                    $sql = $con->prepare("SELECT COUNT(*) AS total_users FROM user_info");
-                                    if ($sql->execute()) {
-                                        $res = $sql->get_result();
-                                        $usercount = $res->fetch_assoc();
-
-                                        echo "<span>" . $usercount['total_users'] . "</span>";
-                                    }
+                                        echo "<span>5</span>";
                                     ?>
                                 </div>
                             </div>

@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $f_size = $_FILES['pimg']['size'];
 
                 $ext =  strtolower(pathinfo($fname, PATHINFO_EXTENSION));
-                $allowedFile = ['jpg', 'jpeg', 'png'];
+                $allowedFile = ['jpg', 'jpeg', 'png','webp','avif'];
 
                 if (in_array($ext, $allowedFile)) {
                     if ($f_size <= 5000000) {
