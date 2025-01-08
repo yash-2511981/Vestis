@@ -194,7 +194,7 @@ include 'db.php';
                                     if ($sql->execute()) {
                                         $categories = $sql->get_result();
                                         while ($row = $categories->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='?category=".$row['name']."'>" . $row['name'] . "</a>";
+                                            echo "<a class='dropdown-item' href='?category=" . $row['id'] . "'>" . $row['name'] . "</a>";
                                         }
                                     }
                                     ?>
@@ -209,7 +209,7 @@ include 'db.php';
                                     if ($sql->execute()) {
                                         $res = $sql->get_result();
                                         while ($row = $res->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='?brand_name=".$row['name']."'>".$row['name']."</a>";
+                                            echo "<a class='dropdown-item' href='?brand_name=" . $row['id'] . "'>" . $row['name'] . "</a>";
                                         }
                                     }
                                     ?>
@@ -225,14 +225,15 @@ include 'db.php';
                     </div>
                 </div>
                 <?php
-                    if (isset($_SESSION['user'])) {
-                        $sql = $con->prepare("SELECT COUNT(*) AS count FROM cart");
-                        $sql->execute();
-                        $res =$sql->get_result();
-                        $cartItem = $res->fetch_assoc();
+                if (isset($_SESSION['user'])) {
+                    $tablename = $_SESSION['user'] . "_cart";
+                    $sql = $con->prepare("SELECT COUNT(*) AS count FROM `" . $tablename . "`");
+                    $sql->execute();
+                    $res = $sql->get_result();
+                    $cartItem = $res->fetch_assoc();
 
-                        echo '<a href="cart.php" id="cart"><span id="cart-count">'.$cartItem['count'].'</span><img src="./images/projectImages/svg/cart.svg" alt="" id="cartlogo"></a>';
-                    }
+                    echo '<a href="cart.php" id="cart"><span id="cart-count">' . $cartItem['count'] . '</span><img src="./images/projectImages/svg/cart.svg" alt="" id="cartlogo"></a>';
+                }
                 ?>
                 <div class="dropdown userlogo">
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -261,20 +262,33 @@ include 'db.php';
 
             <div class="container products my-5">
                 <?php
-                
-                $fetchbrand = isset($_GET['brand_name']) ? $_GET['brand_name'] : null;
-                
-                $fetchcategory = isset($_GET['category']) ? $_GET['category'] : null;
-                
-                $sqlquery = "SELECT * FROM product_info LIMIT 8";
 
-                $res = $con->query($sql);
+                $sql = "SELECT * FROM product_info LIMIT 8";
+                
+                if (!empty($_GET['brand_name'])) {
+                    $sql = "SELECT * FROM product_info WHERE brand = ?";
+                }
+                if (!empty($_GET['category'])) {
+                    $sql = "SELECT * FROM product_info WHERE category = ?";
+                }
+
+                $res = $con->prepare($sql);
+
+                if (!empty($_GET['brand_name'])) {
+                    $res->bind_param("s", $_GET['brand_name']);
+                }
+                if (!empty($_GET['category'])) {
+                    $res->bind_param("s", $_GET['category']);
+                }
+
+                $res->execute();
+                $result = $res->get_result();
 
                 $count = 0;
                 echo '<div class="row justify-content-center align-items-center g-1 my-5">';
-                if ($res->num_rows > 0) {
+                if ($result->num_rows > 0) {
 
-                    while ($row = $res->fetch_assoc()) {
+                    while ($row = $result->fetch_assoc()) {
                         echo '<div class="col-12 col-sm-6 col-md-3 my-1">';
                         echo '<div class="card product">';
                         echo '<img class="card-img-top" src="./admin/productsimages/' . $row['img'] . '" alt="Title" />';

@@ -25,11 +25,33 @@ if (!isset($_SESSION['user'])) {
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: rgb(38, 38, 38);
+        }
+
+        .userlogo button {
+            height: 60px;
+            width: 60px;
+            background: transparent;
+            border: none;
+        }
+
+        .userlogo ul {
+            width: auto;
+            height: auto;
+        }
+
+        .header {
+            background-image: url("images/projectImages/nvbg2.jpg");
+        }
+    </style>
 </head>
 
 <body>
     <header>
-    <div class="header">
+        <div class="header">
             <nav class="navbar navbar-expand-sm navbar-dark">
                 <a class="navbar-brand mx-5" href="index.php"><img src="images/projectImages/logo.png"
                         class="img-fluid rounded" alt="" height="60px" width="60px" /></a>
@@ -39,37 +61,6 @@ if (!isset($_SESSION['user'])) {
                             <li class="nav-item m-2">
                                 <a class="nav-link active" href="index.php" aria-current="page">Home
                                     <span class="visually-hidden">(current)</span></a>
-                            </li>
-                            <li class="nav-item dropdown m-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Categories</a>';
-                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownId">
-                                    <?php
-                                    $sql = $con->prepare("SELECT * FROM category");
-                                    $categories;
-                                    if ($sql->execute()) {
-                                        $categories = $sql->get_result();
-                                        while ($row = $categories->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
-                                        }
-                                    }
-                                    ?>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown m-2">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Brands</a>
-                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownId">
-                                    <?php
-                                    $sql = $con->prepare("SELECT * FROM brands");
-                                    if ($sql->execute()) {
-                                        $res = $sql->get_result();
-                                        while ($row = $res->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
-                                        }
-                                    }
-                                    ?>
-                                </div>
                             </li>
                         </ul>
                         <form class="d-flex my-2 my-lg-0">
@@ -97,9 +88,19 @@ if (!isset($_SESSION['user'])) {
                     </ul>
                 </div>
     </header>
-    <main></main>
+    <main>
+        <div class="container">
+                <div class="container cart-items">
+                        
+                </div>
+                <div class="container order-summary">
+
+                </div>
+        </div>
+
+    </main>
     <?php
-        include 'footer.html';
+    include 'footer.html';
     ?>
     <!-- Bootstrap JavaScript Libraries -->
     <script

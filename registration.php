@@ -54,6 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$sql->execute()) {
             $error[] = $sql->error;
         } else {
+            $tablename = $username."_cart";
+
+            $createcart = $con->prepare("CREATE TABLE `".$tablename."`(pid int,foreign key(pid) references product_info(id))");
+            $createcart->execute();
+            $createcart->close();
+
             $username = '';
             $name = '';
             $mob = '';
@@ -63,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location:login.php");
             exit();
         }
+        $sql->close();
     }
 }
 ?>
