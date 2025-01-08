@@ -24,7 +24,7 @@ include 'db.php';
     <style>
         body {
             overflow-x: hidden;
-            background-color:rgb(38, 38, 38)  ;
+            background-color: rgb(38, 38, 38);
         }
 
         .userlogo button {
@@ -82,7 +82,7 @@ include 'db.php';
             text-shadow: 3px 3px 5px grey;
         }
 
-        .products{
+        .products {
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -109,7 +109,7 @@ include 'db.php';
 
         }
 
-        .product span{
+        .product span {
             color: darkgrey;
         }
 
@@ -131,7 +131,43 @@ include 'db.php';
             margin: 1px 0 1px 5px;
         }
 
-        /* css for footer */
+        #cart {
+            position: relative;
+            height: 50px;
+            width: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        #cartlogo {
+            height: 38px;
+            width: 38px;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: 37%;
+            /* Adjust to bring it closer to the corner */
+            right: 23%;
+            /* Adjust to bring it closer to the corner */
+            height: 22px;
+            /* Adjust size of the count badge */
+            width: 22px;
+            /* Adjust size of the count badge */
+            background-color: transparent;
+            /* Green color for the badge */
+            border-radius: 50%;
+            /* Circular badge */
+            color: white;
+            /* White text color */
+            font-size: 12px;
+            /* Font size to fit inside the badge */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -158,7 +194,7 @@ include 'db.php';
                                     if ($sql->execute()) {
                                         $categories = $sql->get_result();
                                         while ($row = $categories->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
+                                            echo "<a class='dropdown-item' href='?category=".$row['name']."'>" . $row['name'] . "</a>";
                                         }
                                     }
                                     ?>
@@ -173,7 +209,7 @@ include 'db.php';
                                     if ($sql->execute()) {
                                         $res = $sql->get_result();
                                         while ($row = $res->fetch_assoc()) {
-                                            echo "<a class='dropdown-item' href='#'>".$row['name']."</a>";
+                                            echo "<a class='dropdown-item' href='?brand_name=".$row['name']."'>".$row['name']."</a>";
                                         }
                                     }
                                     ?>
@@ -188,6 +224,16 @@ include 'db.php';
                         </form>
                     </div>
                 </div>
+                <?php
+                    if (isset($_SESSION['user'])) {
+                        $sql = $con->prepare("SELECT COUNT(*) AS count FROM cart");
+                        $sql->execute();
+                        $res =$sql->get_result();
+                        $cartItem = $res->fetch_assoc();
+
+                        echo '<a href="cart.php" id="cart"><span id="cart-count">'.$cartItem['count'].'</span><img src="./images/projectImages/svg/cart.svg" alt="" id="cartlogo"></a>';
+                    }
+                ?>
                 <div class="dropdown userlogo">
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
@@ -215,7 +261,13 @@ include 'db.php';
 
             <div class="container products my-5">
                 <?php
-                $sql = "SELECT * FROM product_info LIMIT 8";
+                
+                $fetchbrand = isset($_GET['brand_name']) ? $_GET['brand_name'] : null;
+                
+                $fetchcategory = isset($_GET['category']) ? $_GET['category'] : null;
+                
+                $sqlquery = "SELECT * FROM product_info LIMIT 8";
+
                 $res = $con->query($sql);
 
                 $count = 0;
@@ -225,22 +277,22 @@ include 'db.php';
                     while ($row = $res->fetch_assoc()) {
                         echo '<div class="col-12 col-sm-6 col-md-3 my-1">';
                         echo '<div class="card product">';
-                        echo '<img class="card-img-top" src="./admin/productsimages/'.$row['img'].'" alt="Title" />';
-                        echo '<span id="pname">'.$row['name'].'<span id="desc">('.$row['description'].')</span></span>';
-                        echo '<span id="price">Rs.'.$row['price'].'</span>';
+                        echo '<img class="card-img-top" src="./admin/productsimages/' . $row['img'] . '" alt="Title" />';
+                        echo '<span id="pname">' . $row['name'] . '<span id="desc">(' . $row['description'] . ')</span></span>';
+                        echo '<span id="price">Rs.' . $row['price'] . '</span>';
                         echo '<div class="container text-center">';
-                        echo '<a href="addtocart.php?id='.$row['id'].'"><button class="btn btn-dark btn-outline-success">Add to Cart</button></a>';
+                        echo '<a href="addtocart.php?id=' . $row['id'] . '"><button class="btn btn-dark btn-outline-success">Add to Cart</button></a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
 
                         $count++;
 
-                        if($count % 4 == 0){
+                        if ($count % 4 == 0) {
                             echo '</div><div class="row justify-content-center align-items-center g-2 my-5">';
                         }
                     }
-                }else{
+                } else {
                     echo "no product found";
                 }
 
