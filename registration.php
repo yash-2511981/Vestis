@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $tablename = $username."_cart";
 
-            $createcart = $con->prepare("CREATE TABLE `".$tablename."`(pid int,foreign key(pid) references product_info(id))");
+            $createcart = $con->prepare("CREATE TABLE `".$tablename."`(pid int NOT NULL,quantity int DEFAULT 1,size varchar(10) DEFAULT 'M',PRIMARY KEY(pid),FOREIGN KEY (pid) REFERENCES product_info(id))");
             $createcart->execute();
             $createcart->close();
 

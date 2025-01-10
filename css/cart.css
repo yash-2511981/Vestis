@@ -1,0 +1,167 @@
+body {
+    background-color: rgb(38, 38, 38);
+}
+
+.userlogo button {
+    height: 60px;
+    width: 60px;
+    background: transparent;
+    border: none;
+}
+
+.userlogo ul {
+    width: auto;
+    height: auto;
+}
+
+.header {
+    background-image: url("../images/projectImages/nvbg2.jpg");
+    height: 400px;
+    background-size: cover;
+    background-position:center 10%;
+}
+
+.header h1 {
+    text-align: center;
+    color: white;
+    margin-top: 100px;
+    font-weight: bolder;
+    font-size: 50px;
+    font-family: 'Rubik Vinyl', cursive;
+}
+
+.cart {
+    height: 600px;
+    width: auto;
+    margin-top: 200px;
+}
+
+.cart-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px;
+    width: 400px;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0px 0px 50px black;
+    background-color: #121212;
+}
+
+.cart-item img {
+    height: 120px;
+    width: 120px;
+    border-radius: 20px;
+}
+
+.cart-item .total {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+}
+
+.product {
+    display: flex;
+    color: white;
+}
+
+.product .pinfo {
+    display: flex;
+    margin: 5px 12px;
+}
+
+.cart-item .cal-total {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    height: 150px;
+    width: 100%;
+}
+
+.product .name-desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.product #pname {
+    font-weight: bolder;
+    font-size: larger;
+    display: flex;
+}
+
+.product #desc {
+    font-size: smaller;
+}
+
+.cal-total form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.cal-total div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cal-total div img {
+    height: 24px;
+    width: 24px;
+}
+
+.styled-input::-webkit-outer-spin-button,
+.styled-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.styled-input[type="number"] {
+    -moz-appearance: textfield;
+    /* Firefox */
+    appearance: textfield;
+    /* Safari */
+}
+
+/* Style the input box */
+.styled-input {
+    width: 50px;
+    padding: 10px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #e8f5e9;
+    transition: all 0.3s ease;
+}
+
+
+.styled-input:focus {
+    border-color: #81c784;
+    outline: none;
+}
+
+/* Remove default appearance and style the select */
+.styled-select {
+    width: 50px;
+    padding: 10px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #e8f5e9;
+    appearance: none;
+    /* Remove default dropdown arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.3s ease;
+}
+
+.styled-select:focus {
+    border-color: #81c784;
+    outline: none;
+}

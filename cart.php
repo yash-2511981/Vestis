@@ -7,6 +7,7 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -25,34 +26,14 @@ if (!isset($_SESSION['user'])) {
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
-    <style>
-        body {
-            overflow-x: hidden;
-            background-color: rgb(38, 38, 38);
-        }
-
-        .userlogo button {
-            height: 60px;
-            width: 60px;
-            background: transparent;
-            border: none;
-        }
-
-        .userlogo ul {
-            width: auto;
-            height: auto;
-        }
-
-        .header {
-            background-image: url("images/projectImages/nvbg2.jpg");
-        }
-    </style>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/cart.css">
 </head>
 
 <body>
     <header>
         <div class="header">
-            <nav class="navbar navbar-expand-sm navbar-dark">
+            <nav class="navbar navbar-expand-sm navbar-dark ">
                 <a class="navbar-brand mx-5" href="index.php"><img src="images/projectImages/logo.png"
                         class="img-fluid rounded" alt="" height="60px" width="60px" /></a>
                 <div class="container mx-0">
@@ -63,12 +44,6 @@ if (!isset($_SESSION['user'])) {
                                     <span class="visually-hidden">(current)</span></a>
                             </li>
                         </ul>
-                        <form class="d-flex my-2 my-lg-0">
-                            <input class="form-control me-sm-2" type="text" placeholder="Search" />
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-                                Search
-                            </button>
-                        </form>
                     </div>
                 </div>
                 <div class="dropdown userlogo">
@@ -87,22 +62,83 @@ if (!isset($_SESSION['user'])) {
                         ?>
                     </ul>
                 </div>
+            </nav>
+            <h1>Shopping Cart</h1>
     </header>
     <main>
-        <div class="container">
-                <div class="container cart-items">
-                        
-                </div>
-                <div class="container order-summary">
+        <div class="container my-5 cart">
+            <?php
+            $cartname = $_SESSION['user'] . "_cart";
+            $sql = "SELECT p.* FROM product_info p JOIN `" . $cartname . "` c ON p.id = c.pid";
+            $cartitems = $con->prepare($sql);
+            $cartitems->execute();
+            $res = $cartitems->get_result();
 
+            echo '<div class="row justify-content-start align-items-center g-3 my-5">';
+            if ($res->num_rows > 0) {
+                $count = 0;
+
+                while ($row = $res->fetch_assoc()) {
+                    echo '<div class="cart-item col-12 m-3">';
+
+                    echo    '<div class="product">';
+                    echo        '<img src="./admin/productsimages/' . $row['img'] . '" alt="Product Image" class="img-fluid" width="150">';
+                    echo        '<div class="pinfo">';
+                    echo            '<div class="name-desc">';
+                    echo                '<p id="pname">' . $row['name'] . '';
+                    echo                '<p id="desc">(' . $row['description'] . ')</p>';
+                    echo                '<p id="price" name="price">Price : ' . $row['price'] . '</p> </p>';
+                    echo             '</div>';
+                    echo        '</div>';
+                    echo    '</div>';
+
+                    echo    '<div class="cal-total">';
+                    echo        '<form method="post">';
+                    echo            '<label for="quantity">Quantity :</label>';
+                    echo            '<input type="number" name="quantity" id="quantity" class="styled-input" value="1">';
+                    echo            '<label for="size">Size :</label>';
+                    echo            '<select name="size" id="size" class="styled-select">';
+                    echo                '<option value="">S</option>';
+                    echo            '</select>';
+                    echo        '</form>';
+                    echo        '<div>';
+                    echo            '<p id="total">Total : ' . $row['price'] . '</p>';
+                    echo            '<a href="removefromcart.php?pid='. $row['id'] .'"><img src="./images/projectImages/svg/delete.svg" alt="" id="remove"></a>';
+                    echo        '</div>';
+                    echo    '</div>';
+
+                    echo  '</div>';
+
+                    $count++;
+
+                    if ($count % 3 == 0) {
+                        echo '</div><div class="row justify-content-start align-items-center g-1 my-5">';
+                    }
+                }
+
+            }else{
+                echo "<h1 class='text-white'>Oops! cart is empty</h1>";
+            }
+            echo '</div>';
+            ?>
+
+            
+            <!-- Cart Summary -->
+            <div class="row align-items-center justify-content-between">
+                <div class="col-4 text-start mx-5">
+                    <h4 class="text-white">Total Price: ₹1900</h4>
                 </div>
-        </div>
+                <div class="col-4 text-end">
+                    <button class="btn btn-dark btn-outline-success">Proceed to Checkout</button>
+                </div>
+            </div>
 
     </main>
+
     <?php
     include 'footer.html';
     ?>
-    <!-- Bootstrap JavaScript Libraries -->
+
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
