@@ -68,8 +68,9 @@ if (!isset($_SESSION['user'])) {
     <main>
         <div class="container my-5 cart">
             <?php
+            $carttotal = 0;
             $cartname = $_SESSION['user'] . "_cart";
-            $sql = "SELECT p.* FROM product_info p JOIN `" . $cartname . "` c ON p.id = c.pid";
+            $sql = "SELECT p.*,c.pid,c.quantity,c.size FROM product_info p JOIN `" . $cartname . "` c ON p.id = c.pid";
             $cartitems = $con->prepare($sql);
             $cartitems->execute();
             $res = $cartitems->get_result();
@@ -93,22 +94,23 @@ if (!isset($_SESSION['user'])) {
                     echo    '</div>';
 
                     echo    '<div class="cal-total">';
-                    echo        '<form method="post">';
+                    echo        '<form method="post" action="updatecart.php?pid='.$row['pid'].'">';
                     echo            '<label for="quantity">Quantity :</label>';
-                    echo            '<input type="number" name="quantity" id="quantity" class="styled-input" value="1">';
+                    echo            '<input type="number" name="quantity" id="quantity" class="styled-input" value="'.$row['quantity'].'">';
                     echo            '<label for="size">Size :</label>';
                     echo            '<select name="size" id="size" class="styled-select">';
-                    echo                '<option value="">S</option>';
+                    echo                '<option value="M">M</option>';
                     echo            '</select>';
                     echo        '</form>';
+
+                            $carttotal += $row['price'] * $row['quantity'];
                     echo        '<div>';
-                    echo            '<p id="total">Total : ' . $row['price'] . '</p>';
+                    echo            '<p id="total">Total : ' .$row['price'] * $row['quantity']. '</p>';
                     echo            '<a href="removefromcart.php?pid='. $row['id'] .'"><img src="./images/projectImages/svg/delete.svg" alt="" id="remove"></a>';
                     echo        '</div>';
                     echo    '</div>';
 
                     echo  '</div>';
-
                     $count++;
 
                     if ($count % 3 == 0) {
@@ -126,7 +128,7 @@ if (!isset($_SESSION['user'])) {
             <!-- Cart Summary -->
             <div class="row align-items-center justify-content-between">
                 <div class="col-4 text-start mx-5">
-                    <h4 class="text-white">Total Price: ₹1900</h4>
+                    <h4 class="text-white">Total :<?php echo $carttotal?></h4>
                 </div>
                 <div class="col-4 text-end">
                     <button class="btn btn-dark btn-outline-success">Proceed to Checkout</button>

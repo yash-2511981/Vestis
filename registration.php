@@ -54,9 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$sql->execute()) {
             $error[] = $sql->error;
         } else {
-            $tablename = $username."_cart";
+            //creating cart for each individual user dynamically
+            $cartname = $username."_cart";
 
-            $createcart = $con->prepare("CREATE TABLE `".$tablename."`(pid int NOT NULL,quantity int DEFAULT 1,size varchar(10) DEFAULT 'M',PRIMARY KEY(pid),FOREIGN KEY (pid) REFERENCES product_info(id))");
+            $createcart = $con->prepare("CREATE TABLE `".$cartname."`(pid int NOT NULL,quantity int DEFAULT 1,size varchar(10) DEFAULT 'M',FOREIGN KEY (pid) REFERENCES product_info(id))");
             $createcart->execute();
             $createcart->close();
 
