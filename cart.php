@@ -70,10 +70,12 @@ if (!isset($_SESSION['user'])) {
             <?php
             $carttotal = 0;
             $cartname = $_SESSION['user'] . "_cart";
+            $orders = [];
             $sql = "SELECT p.*,c.pid,c.quantity,c.size FROM product_info p JOIN `" . $cartname . "` c ON p.id = c.pid";
             $cartitems = $con->prepare($sql);
             $cartitems->execute();
             $res = $cartitems->get_result();
+
 
             echo '<div class="row justify-content-start align-items-center g-3 my-5">';
             if ($res->num_rows > 0) {
@@ -94,22 +96,41 @@ if (!isset($_SESSION['user'])) {
                     echo    '</div>';
 
                     echo    '<div class="cal-total">';
-                    echo        '<form method="post" action="updatecart.php?pid='.$row['pid'].'">';
+                    echo        '<form method="post" action="updatecart.php?pid=' . $row['pid'] . '">';
                     echo            '<label for="quantity">Quantity :</label>';
-                    echo            '<input type="number" name="quantity" id="quantity" class="styled-input" value="'.$row['quantity'].'">';
+                    echo            '<input type="number" name="quantity" id="quantity" class="styled-input" value="' . $row['quantity'] . '">';
                     echo            '<label for="size">Size :</label>';
                     echo            '<select name="size" id="size" class="styled-select">';
-                    echo                '<option value="M">M</option>';
-                    echo            '</select>';
-                    echo        '</form>';
 
-                            $carttotal += $row['price'] * $row['quantity'];
+                    //trying to select the size dynamically
+                    $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+                    foreach ($sizes as $size) {
+                        $selected = ($row['size'] == $size) ? 'selected' : '';
+                        echo '<option value = "' . $size . '" ' . $selected . '>' . $size . '</>';
+                    }
+                    echo            '</select>';
+                    echo            '<button type="submit" class="btn btn-sm btn-dark btn-outline-success">Update</button>';
+                    echo        '</form>';
+                    $total = $row['price'] * $row['quantity'];
+                    $carttotal += $total;
                     echo        '<div>';
-                    echo            '<p id="total">Total : ' .$row['price'] * $row['quantity']. '</p>';
-                    echo            '<a href="removefromcart.php?pid='. $row['id'] .'"><img src="./images/projectImages/svg/delete.svg" alt="" id="remove"></a>';
+                    echo            '<p id="total">Total : ' . $total . '</p>';
+                    echo            '<a href="removefromcart.php?pid=' . $row['id'] . '"><img src="./images/projectImages/svg/delete.svg" alt="" id="remove"></a>';
                     echo        '</div>';
                     echo    '</div>';
 
+                    //using array to save the details of each product in array to process it on the order page to place order
+                    $orders[] = [
+                        "id" => $row['pid'],
+                        "quant" => $row['quantity'],
+                        "size" => $row['size'],
+                        "amt" => $total,
+                        "uid" => $_SESSION['uid'],
+                        "email" => $_SESSION['uemail'],
+                        "contact" => $_SESSION['ucontact'],
+                        "Address" => null,
+                        "payment" => 1
+                    ];
                     echo  '</div>';
                     $count++;
 
@@ -118,20 +139,27 @@ if (!isset($_SESSION['user'])) {
                     }
                 }
 
-            }else{
+                //create the container which will provide the address to select if user ordered something before otherwise give option to insert the address
+
+            }else {
+            //if there is no cart item present in the cart
                 echo "<h1 class='text-white'>Oops! cart is empty</h1>";
+
             }
             echo '</div>';
+
+            //saving array in session to use in order page
+            $_SESSION['orders'] = $orders;
             ?>
 
-            
+
             <!-- Cart Summary -->
             <div class="row align-items-center justify-content-between">
                 <div class="col-4 text-start mx-5">
-                    <h4 class="text-white">Total :<?php echo $carttotal?></h4>
+                    <h4 class="text-white">Total :<?php echo $carttotal ?></h4>
                 </div>
                 <div class="col-4 text-end">
-                    <button class="btn btn-dark btn-outline-success">Proceed to Checkout</button>
+                    <a href="insertOrder.php"><button class="btn btn-dark btn-outline-success">Proceed to Checkout</button></a>
                 </div>
             </div>
 

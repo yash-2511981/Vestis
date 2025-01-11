@@ -13,8 +13,6 @@
             $fetchcart->execute();
             $res = $fetchcart->get_result();
 
-
-            
             if ($res->num_rows > 0) {
                 $item = $res->fetch_assoc();
 
@@ -32,6 +30,7 @@
                     }
                 }
             } else {
+                //if there is no product is matched with given id then new product is inserted
                 $insertItem = $con->prepare("INSERT INTO `" . $cartname . "` (pid) VALUES (?)");
                 $insertItem->bind_param("i", $_GET['id']);
                 if ($insertItem->execute()) {

@@ -5,3 +5,39 @@
 #404040 (Light charcoal gray for text/backgrounds)
 #1a1a1a (Very dark gray for hover/active states)
 #B3B3B3 (Light gray for text contrast)
+
+
+Pending:
+The order has been received but payment has not been confirmed, or the order is awaiting approval (if needed).
+
+Processing:
+The order has been confirmed, payment is successful, and it is being prepared or packaged for shipping. This indicates the order is in progress.
+Shipped:
+The order has been dispatched from the warehouse or fulfillment center and is on its way to the customer. This status usually comes with tracking information.
+Out for Delivery:
+The order is in the final delivery stage, meaning it has arrived at the local courier facility and is being delivered to the customer’s address.
+Delivered:
+The order has been successfully delivered to the customer. This status often includes proof of delivery, like a signature or confirmation.
+Completed:
+The order is fully processed, delivered, and closed. This status typically indicates the order is finalized.
+Canceled:
+The order has been canceled, either by the customer or the seller, before it was shipped. Reasons for cancellation could include out-of-stock items, payment issues, or customer requests.
+Returned:
+The customer has returned the order, and it is in the process of being refunded or restocked.
+Refunded:
+The customer has received their money back for an order that was canceled or returned. This status indicates that a refund has been processed.
+Failed:
+The order couldn’t be processed due to a payment failure, out-of-stock items, or other issues.
+On Hold:
+The order is temporarily suspended due to some issue, such as a payment verification problem or stock availability.
+Partially Shipped:
+In cases where the order consists of multiple items, some items have been shipped, but others are still being processed.
+
+
+Example Workflow:
+Order Placed (Pending)
+Payment Processed (Processing)
+Item Packaged and Shipped (Shipped)
+Item Out for Delivery (Out for Delivery)
+Item Delivered (Delivered)
+Order Completed (Completed)
