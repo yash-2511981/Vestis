@@ -18,12 +18,21 @@
 
                 //if product is available with same size then update quantity
                 if ($item['size'] == "M") {
-                    $newquant = $item['quantity']+1;
+                    $newquant = $item['quantity'] + 1;
                     $updtquantity = $con->prepare("UPDATE `" . $cartname . "` set quantity=? WHERE pid = ?");
                     $updtquantity->bind_param("ii", $newquant, $_GET['id']);
 
 
                     if ($updtquantity->execute()) {
+                        echo "updated";
+                        header("Location:index.php");
+                    } else {
+                        echo $updtquantity->error;
+                    }
+                } else {
+                    $insertItem = $con->prepare("INSERT INTO `" . $cartname . "` (pid) VALUES (?)");
+                    $insertItem->bind_param("i", $_GET['id']);
+                    if ($insertItem->execute()) {
                         header("Location:index.php");
                     } else {
                         echo $updtquantity->error;
