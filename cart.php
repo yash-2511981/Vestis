@@ -26,7 +26,6 @@ if (!isset($_SESSION['user'])) {
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/cart.css">
 </head>
 
@@ -129,7 +128,11 @@ if (!isset($_SESSION['user'])) {
                         "email" => $_SESSION['uemail'],
                         "contact" => $_SESSION['ucontact'],
                         "Address" => null,
-                        "payment" => 1
+                        "paymeth" => null,
+                        "paystatus" => 0,
+                        "placed_date" => 00 - 00 - 0000,
+                        "expected_date" => 00 - 00 - 0000,
+                        "order_status" => 00 - 00 - 0000,
                     ];
                     echo  '</div>';
                     $count++;
@@ -141,10 +144,9 @@ if (!isset($_SESSION['user'])) {
 
                 //create the container which will provide the address to select if user ordered something before otherwise give option to insert the address
 
-            }else {
-            //if there is no cart item present in the cart
+            } else {
+                //if there is no cart item present in the cart
                 echo "<h1 class='text-white'>Oops! cart is empty</h1>";
-
             }
             echo '</div>';
 
@@ -153,16 +155,55 @@ if (!isset($_SESSION['user'])) {
             ?>
 
 
-            <!-- Cart Summary -->
-            <div class="row align-items-center justify-content-between">
-                <div class="col-4 text-start mx-5">
-                    <h4 class="text-white">Total :<?php echo $carttotal ?></h4>
-                </div>
-                <div class="col-4 text-end">
-                    <a href="insertOrder.php"><button class="btn btn-dark btn-outline-success">Proceed to Checkout</button></a>
-                </div>
-            </div>
+            <!-- form for final checkout the orders -->
+                <form action="insertOrder.php" method="post">
+                    <div class="row d-flex align-items-center justify-content-between my-5 mx-0 g-3 p-3 ">
+                        <div class="col-9 d-flex flex-column rounded p-3 box-shadow">
+                            <div class="col-12 col-md-8 mb-3">
+                                <div class="form-floating">
+                                    <textarea name="address" id="address" class="form-control styled-input" style="height: 100px;width:700px"></textarea>
+                                    <label for="address">Address:</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 mb-3 d-flex justify-content-around align-items-center">
+                                <div class="form-floating">
+                                    <input type="number" name="pincode" id="pincode" class="form-control styled-input" style="height: 40px;width:200px">
+                                    <label for="pincode">Pincode:</label>
+                                </div>
+                                <div class="mx-5">
+                                    <h5 class="text-white">Payment Options</h5>
+                                </div>
+                                <h1 class="text-white">:</h1>
+                                <div class="d-flex align-items-center g-5 mx-5">
+                                    <div class="form-check mx-3">
+                                        <input class="form-check-input" type="radio" name="paymode" id="online" value="onlinepay" />
+                                        <label class="form-check-label text-white" for="online">Online</label>
+                                    </div>
+                                    <div class="form-check mx-3">
+                                        <input class="form-check-input" type="radio" name="paymode" id="cod" value="cod" />
+                                        <label class="form-check-label text-white" for="cod">COD</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Total Price and Checkout Button -->
+                        <div class="col-3 d-flex flex-column align-items-center justify-content-evenly container rounded">
+                            <div class="mb-3">
+                                <h6 class="text-danger fw-bold">CartTotal : <span class="text-success"><?php echo $carttotal ?></span></h6>
+                                <h6 class="text-danger fw-bold">Gst : <span class="text-success">
+                                        <?php $gst = 0.10;
+                                        $gst *= $carttotal;
+                                        echo $gst; ?></span>
+                                </h6>
+                                <h6 class="text-danger fw-bold">Total : <span class="text-success"><?php echo $carttotal + $gst; ?></span></h6>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-dark btn-outline-success">Proceed to Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
     </main>
 
     <?php

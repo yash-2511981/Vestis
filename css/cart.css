@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=Rubik+Vinyl&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Varela+Round&display=swap');
 body {
     background-color: rgb(38, 38, 38);
 }
@@ -31,7 +32,7 @@ body {
 }
 
 .cart {
-    height: 600px;
+    height: auto;
     width: auto;
     margin-top: 200px;
 }
@@ -153,7 +154,7 @@ body {
     border-radius: 8px;
     font-size: 16px;
     color: #333;
-    background-color: grey;
+    background-color: #e8f5e9;
     appearance: none;
     /* Remove default dropdown arrow */
     -webkit-appearance: none;
