@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $order['paymeth'] = $_POST['paymode'];
                 $order['paystatus'] = $paystatus;
                 $order['pincode'] = $_POST['pincode'];
-                
             }
 
             $_SESSION['updatedorders'] = $neworders;
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 
 <head>
-    <title>Title</title>
+    <title>Cart</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -233,7 +232,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo '</form>';
             } else {
                 //if there is no cart item present in the cart
-                echo "<h1 class='text-white'>Oops! cart is empty</h1>";
+                echo '<div class="container my-5 text-center p-5">';
+                echo    '<h1 class="text-white">Oops! cart is empty.<img src="images/projectImages/svg/dissatisfied.svg" alt="sad face" height="60px" width="60px"></h1>';
+                echo    '<a href="index.php"><button type="submit" name="continueshopping" class="btn btn-dark btn-outline-success btn-lg">Add New Product </button></a>';
+                echo '</div>';
             }
             echo '</div>';
 

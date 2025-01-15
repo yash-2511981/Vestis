@@ -70,68 +70,132 @@ if (!isset($_SESSION['user'])) {
         .orders {
             height: 550px;
             width: auto;
+            
         }
 
         .orders .order {
-            height: 325px;
-            width: 100%;
-            padding: 5px;
-            background-color: wheat;
+            height: 280px;
+            width: 85%;
+            border-radius: 15px;
+            background-color: #282828;
+            box-shadow: 0px 0px 50px black;
         }
 
         .order .status {
             height: 60px;
             width: 100%;
-            background-color: red;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .status .status-inside{
             display: flex;
             align-items: center;
             justify-content: start;
-            padding: 5px;
-            border-radius: 15px 15px 0 0;
-            margin-bottom: 2px;
         }
 
-        .status .status-img{
+        .status .status-img {
             height: 40px;
             width: 40px;
             border-radius: 50%;
-            background-color: yellow;
+            background-color:rgb(94, 208, 94);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .status .order-status{
+        .status .order-status {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             margin-left: 5px;
         }
 
-        .order-status h6{
+        .order-status h6 {
             margin: 0;
         }
 
         .order .product {
             height: 110px;
             width: 100%;
-            padding: 5px;
-            background-color: green;
-            margin-bottom:2px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        a {
+            text-decoration-line: none;
+        }
+
+        .order .product .pimg {
+            height: 100px;
+            width: 100px;
+            border-radius: 10px;
+        }
+
+        .order .product .pdetails {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            width: 78%;
+            height: 100%;
+        }
+
+        .order .product .pdetails h6,
+        p,
+        span {
+            margin: 1px 0;
+            color: darkgrey;
+        }
+
+        .invoice {
+            height: 100%;
+            display: flex;
+            align-items: end;
+        }
+
+        .invoice a {
+            text-decoration-line: none;
+            color: red;
+        }
+
+        .invoice #bill {
+            visibility: hidden;
+            opacity: 0;
         }
 
         .order .review {
             height: 50px;
             width: 100%;
-            background-color: yellow;
-            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .review div input {
+            height: auto;
+            width: 50px;
+            border-radius: 10px;
+            border: 1px solid green;
+            text-align: center;
+        }
+
+        .review div label{
+            color: darkgrey;
         }
 
         .order .exchange {
             height: 60px;
             width: 100%;
-            background-color: black;
             border-radius: 0 0 15px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
         }
     </style>
 
@@ -182,30 +246,48 @@ if (!isset($_SESSION['user'])) {
                 <div class="col-6 m-0">
                     <div class="order">
                         <div class="status">
-                            <div class="status-img">
-                                <img src="./images/projectImages/svg/cart.svg" alt="">
+                            <div class="status-inside">
+                                <div class="status-img">
+                                    <img src="./images/projectImages/svg/cart.svg" alt="">
+                                </div>
+                                <div class="order-status">
+                                    <h6 id=""><b>Delivered</b></h6>
+                                    <span id="date">on, Thu, 15 Dec</span>
+                                </div>
                             </div>
-                            <div class="order-status">
-                                <h6 id=""><b>Delivered</b></h6>
-                                <span id="date">on, Thu, 15 Dec</span>
+                            <div>
+                                <a href=""><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>
                             </div>
                         </div>
                         <div class="product">
-                            <div id="pimg">
-                                <img src="" alt="">
+                            <div class="pimg">
+                                <img src="" alt="" width="100px">
                             </div>
                             <div class="pdetails">
-
+                                <h6><b>BRAND</b></h6>
+                                <span>DESCRIPTION</span>
+                                <span>size</span>
+                                <span>prize</span>
                             </div>
-                            <div class="act">
-
+                            <div class="invoice">
+                                <a href=""><img src="./images/projectImages/svg/receipt.svg" alt=""></a>
                             </div>
                         </div>
                         <div class="review">
+                            <div>
+                                <label for="review">Add Rating :</label>
+                                <input type="number" name="review" id="review" min="1" max="5" step="1">
+                            </div>
 
+                            <a href="">
+                                <h6><b>Add Review</b></h6>
+                            </a>
                         </div>
                         <div class="exchange">
-
+                            <span>Exchange/Return is available till thu,22 Dec</span>
+                            <a href="">
+                                <h6><b>Exchange/Refund</b></h6>
+                            </a>
                         </div>
                     </div>
                 </div>
