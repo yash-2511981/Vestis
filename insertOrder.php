@@ -5,9 +5,11 @@ if (empty($_SESSION['user'])) {
     header('Location:login.php');
 } else {
     $date = new DateTime('now');
-    $orderdate = $date->format("Y-m-d H:i:s");
+    $orderdate = $date->format("D, d M");
+    
     $deliverydate = $date->modify('+7 days');
-    $deliverydate = $deliverydate->format("Y-m-d H:i:s");
+    $deliverydate = $deliverydate->format("D, d M");
+
 
     $finalOrders = $_SESSION['updatedorders'];
     $count = 0;
@@ -22,7 +24,7 @@ if (empty($_SESSION['user'])) {
     if (count($finalOrders) == $count) {
         $emptycart = $con->prepare("TRUNCATE TABLE `" . $_SESSION['user'] . "_cart`");
         if ($emptycart->execute()) {
-            header("location:index.php");
+            header("location:orders.php");
         }
     }
 }
