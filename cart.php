@@ -9,11 +9,11 @@ if (!isset($_SESSION['user'])) {
 
 $carterros = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!empty($_POST['place_order']) && !empty($_POST['address']) && !empty($_POST['pincode'])) {
+    if (!empty($_POST['place_order']) &&(!empty($_POST['address']) && strlen($_POST['address']) > 25) && !empty($_POST['pincode'])) {
         if (isset($_POST['checkout'])) {
 
             $neworders = $_SESSION['orders'];
-            $paystatus = ($_POST['paymode'] == 'onlinepay') ? 9 : 1;
+            $paystatus = ($_POST['paymode'] == 'onlinepay') ? 5 : 1;
             foreach ($neworders as &$order) {
                 $order['uid'] = $_SESSION['uid'];
                 $order['email'] = $_SESSION['uemail'];
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     } else {
-        $carterros[] = "address and pincode should not be empty";
+        $carterros[] = "address and pincode should not be empty and address should be more than 50 char";
     }
 }
 ?>
@@ -113,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $cartitems->execute();
             $res = $cartitems->get_result();
 
-
             echo '<div class="row justify-content-start align-items-center g-3 my-5">';
             if ($res->num_rows > 0) {
                 $count = 0;
@@ -179,6 +178,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
 
+                $getaddress = $con->prepare("SELECT address,pincode,oid FROM orders_info WHERE uid = ? ORDER BY oid DESC LIMIT 1");
+                $getaddress->bind_param("i", $_SESSION['uid']);
+                $getaddress->execute();
+                $address = $getaddress->get_result();
+                $add = $address->fetch_assoc();
+                $previousaddress = !empty($add['address']) ? $add['address']:"";
+                $previouspin = !empty($add['pincode']) ? $add['pincode']:"";
                 //create the form for final checkout to place the order
                 echo '<form method="post">';
                 echo '  <input type="hidden" name="place_order" value="1">';
@@ -186,13 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo '        <div class="col-8 d-flex flex-column p-3 custom-shadow mx-1">';
                 echo '            <div class="col-12 col-md-8 mb-3">';
                 echo '                <div class="form-floating">';
-                echo '                    <textarea name="address" id="address" class="form-control styled-input" style="height: 100px;width:700px"></textarea>';
+                echo '                    <textarea name="address" id="address" class="form-control styled-input" style="height: 100px;width:700px">' . $previousaddress . '</textarea>';
                 echo '                    <label for="address">Address:</label>';
                 echo '                </div>';
                 echo '            </div>';
                 echo '            <div class="col-12 col-md-4 mb-3 d-flex justify-content-around align-items-center">';
                 echo '                <div class="form-floating">';
-                echo '                    <input type="number" name="pincode" id="pincode" class="form-control styled-input" style="height: 40px;width:200px">';
+                echo '                    <input type="number" name="pincode" id="pincode" class="form-control styled-input" style="height: 40px;width:200px" value="' . $previouspin . '">';
                 echo '                    <label for="pincode">Pincode:</label>';
                 echo '                </div>';
                 echo '                <div class="mx-5">';
@@ -210,6 +216,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo '                    </div>';
                 echo '                </div>';
                 echo '            </div>';
+                if (!empty($carterros)) {
+                    foreach ($carterros as $err) {
+                        echo '            <span class="text-danger text-center my-4 ">' . $err . '!</span>,';
+                    }
+                }
                 echo '        </div>';
 
                 echo '        <!-- Total Price and Checkout Button -->';
