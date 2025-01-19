@@ -1,6 +1,6 @@
 <?Php
 session_start();
-include './db.php';
+include 'db.php';
 
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
@@ -68,13 +68,12 @@ if (!isset($_SESSION['user'])) {
         }
 
         .orders {
-            height: 550px;
+            height: auto;
             width: auto;
-            
         }
 
         .orders .order {
-            height: 280px;
+            height: auto;
             width: 85%;
             border-radius: 15px;
             background-color: #282828;
@@ -91,7 +90,7 @@ if (!isset($_SESSION['user'])) {
             border-radius: 15px 15px 0 0;
         }
 
-        .status .status-inside{
+        .status .status-inside {
             display: flex;
             align-items: center;
             justify-content: start;
@@ -101,7 +100,7 @@ if (!isset($_SESSION['user'])) {
             height: 40px;
             width: 40px;
             border-radius: 50%;
-            background-color:rgb(94, 208, 94);
+            background-color: rgb(94, 208, 94);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -128,12 +127,6 @@ if (!isset($_SESSION['user'])) {
 
         a {
             text-decoration-line: none;
-        }
-
-        .order .product .pimg {
-            height: 100px;
-            width: 100px;
-            border-radius: 10px;
         }
 
         .order .product .pdetails {
@@ -184,7 +177,7 @@ if (!isset($_SESSION['user'])) {
             text-align: center;
         }
 
-        .review div label{
+        .review div label {
             color: darkgrey;
         }
 
@@ -241,65 +234,113 @@ if (!isset($_SESSION['user'])) {
 
     </main>
     <div class="container orders">
-        <form action="">
-            <div class="row justify-content-between align-items-center g-2 my-5">
-                <div class="col-6 m-0">
-                    <div class="order">
-                        <div class="status">
-                            <div class="status-inside">
-                                <div class="status-img">
-                                    <img src="./images/projectImages/svg/cart.svg" alt="">
-                                </div>
-                                <div class="order-status">
-                                    <h6 id=""><b>Delivered</b></h6>
-                                    <span id="date">on, Thu, 15 Dec</span>
-                                </div>
-                            </div>
-                            <div>
-                                <a href=""><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>
-                            </div>
-                        </div>
-                        <div class="product">
-                            <div class="pimg">
-                                <img src="" alt="" width="100px">
-                            </div>
-                            <div class="pdetails">
-                                <h6><b>BRAND</b></h6>
-                                <span>DESCRIPTION</span>
-                                <span>size</span>
-                                <span>prize</span>
-                            </div>
-                            <div class="invoice">
-                                <a href=""><img src="./images/projectImages/svg/receipt.svg" alt=""></a>
-                            </div>
-                        </div>
-                        <div class="review">
-                            <div>
-                                <label for="review">Add Rating :</label>
-                                <input type="number" name="review" id="review" min="1" max="5" step="1">
-                            </div>
 
-                            <a href="">
-                                <h6><b>Add Review</b></h6>
-                            </a>
-                        </div>
-                        <div class="exchange">
-                            <span>Exchange/Return is available till thu,22 Dec</span>
-                            <a href="">
-                                <h6><b>Exchange/Refund</b></h6>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+        <?php
+        $fetchorder = $con->prepare("SELECT o.oid, o.size, o.order_date, o.delivery_date, o.exchangedate, p.img, p.description, b.name, s.state, ps.paystate 
+                            FROM orders_info o
+                            INNER JOIN product_info p ON o.pid = p.id 
+                            INNER JOIN brands b ON p.brand = b.id
+                            INNER JOIN status s ON o.order_status = s.sid
+                            INNER JOIN paystatus ps ON o.pay_status = ps.id 
+                            WHERE o.uid = ?");
+        $fetchorder->bind_param("i", $_SESSION['uid']);
+        if ($fetchorder->execute()) {
+            $orders = $fetchorder->get_result();
+            echo '<div class="row d-flex justify-content-between align-items-center g-2 my-5">'; // Start the first row
+
+            if ($orders->num_rows > 0) {
+                $count = 0;
+                while ($row = $orders->fetch_assoc()) {
+
+                    // Start a new form for each order
+
+                    // Each order inside a col-6 (half width) column
+                    echo '    <div class="col-md-6 mb-4">'; // Use col-md-6 for two orders in one row
+                    echo '      <form action="" method="post">';
+
+                    echo '        <div class="order">';
+                    echo '            <div class="status">';
+                    echo '                <div class="status-inside">';
+                    echo '                    <div class="status-img">';
+                    echo '                        <img src="./images/projectImages/svg/cube.svg" alt="">';
+                    echo '                    </div>';
+                    echo '                    <div class="order-status">';
+                    echo '                        <h6><b>Order is ' . $row['state'] . '</b></h6>';
+                    echo '                        <span id="date">Expected Delivery till ' . $row['delivery_date'] . '</span>';
+                    echo '                    </div>';
+                    echo '                </div>';
+                    if ($row['state'] !== "delivered") {
+                        echo '                <div>';
+                        echo '                    <a href=""><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
+                        echo '                </div>';
+                    }
+                    echo '            </div>';
+
+                    // Product information
+                    echo '            <div class="product">';
+                    echo '                <div class="pimg">';
+                    echo '                    <img src="./admin/productsimages/' . $row['img'] . '" alt="" width="100px" height="100px" class="rounded">';
+                    echo '                </div>';
+                    echo '                <div class="pdetails">';
+                    echo '                    <h6><b>' . $row['name'] . '</b></h6>';
+                    echo '                    <span>' . $row['description'] . '</span>';
+                    echo '                    <span>' . $row['size'] . '</span>';
+                    echo '                    <span>Payment is ' . $row['paystate'] . '</span>';
+                    echo '                </div>';
+
+                    if ($row['paystate'] == "done") {
+                        echo '                <div class="invoice">';
+                        echo '                    <a href=""><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
+                        echo '                </div>';
+                    }
+                    echo '            </div>';
+
+                    // Review section for delivered orders
+                    if ($row['state'] == "delivered") {
+                        echo '            <div class="review">';
+                        echo '                <div>';
+                        echo '                    <label for="review">Add Rating :</label>';
+                        echo '                    <input type="number" name="review" id="review" min="1" max="5" step="1">';
+                        echo '                </div>';
+                        echo '                <a href="">';
+                        echo '                    <h6><b>Add Review</b></h6>';
+                        echo '                </a>';
+                        echo '            </div>';
+                    }
+
+                    // Exchange/Refund info
+                    echo '            <div class="exchange">';
+                    echo '                <span>Exchange/Return is available till ' . $row['exchangedate'] . '</span>';
+                    echo '                <a href="">';
+                    echo '                    <h6><b>Return</b></h6>';
+                    echo '                </a>';
+                    echo '            </div>';
+
+                    echo '        </div>';
+                    echo '      </form>';
+                    echo '    </div>'; // Close the col-6 div
+
+                    // Increase the counter
+                    $count++;
+
+                    // After every 2 items, close the current row and start a new one
+                    if ($count % 2 == 0) {
+                        echo '</div><div class="row justify-content-between align-items-center g-2 my-5">'; // Start a new row after 2 orders
+                    }
+                }
+            }
+
+            echo '</div>'; // Close the last row
+        } else {
+            echo $ordererror[] = $fetchorder->error;
+        }
+        ?>
     </div>
     <footer>
         <?php
         include 'footer.html';
         ?>
     </footer>
-    <!-- Bootstrap JavaScript Libraries -->
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
