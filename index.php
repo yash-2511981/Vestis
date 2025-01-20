@@ -74,6 +74,10 @@ include 'db.php';
             padding: 5px 0;
         }
 
+        .profile{
+            min-width: 300px;
+        }
+
         .main h1 {
             font-weight: bolder;
             text-align: center;
@@ -239,11 +243,14 @@ include 'db.php';
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end profile">
                         <?php
                         if (isset($_SESSION['user'])) {
                             $username = $_SESSION['user'];
-                            echo "<li><a class='dropdown-item' href='profile.php'>$username</a></li>";
+
+                            echo "<h4 class='text-center'>Welcome $username !</h4>";
+                            echo "<li><a class='dropdown-item' href='profile.php'>Profile</a></li>";
+                            echo "<li><a class='dropdown-item' href='orders.php'>Orders</a></li>";
                             echo "<li><a class='dropdown-item' href='logout.php'>LogOut</a></li>";
                         } else {
                             echo "<li><a class='dropdown-item' href='login.php'>Sign In</a></li>";

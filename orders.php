@@ -67,6 +67,10 @@ if (!isset($_SESSION['user'])) {
             padding: 5px 0;
         }
 
+        .profile{
+            min-width: 300px;
+        }
+
         .orders {
             height: auto;
             width: auto;
@@ -120,7 +124,7 @@ if (!isset($_SESSION['user'])) {
         .order .product {
             height: 110px;
             width: 100%;
-            padding: 10px;
+            padding: 10px 25px;
             display: flex;
             justify-content: space-evenly;
         }
@@ -189,6 +193,7 @@ if (!isset($_SESSION['user'])) {
             align-items: center;
             justify-content: space-between;
             padding: 10px;
+            margin-top:10px ;
         }
     </style>
 
@@ -214,11 +219,14 @@ if (!isset($_SESSION['user'])) {
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end profile">
                         <?php
                         if (isset($_SESSION['user'])) {
                             $username = $_SESSION['user'];
-                            echo "<li><a class='dropdown-item' href='profile.php'>$username</a></li>";
+
+                            echo "<h4 class='text-center'>Welcome $username !</h4>";
+                            echo "<li><a class='dropdown-item' href='profile.php'>Profile</a></li>";
+                            echo "<li><a class='dropdown-item' href='orders.php'>Orders</a></li>";
                             echo "<li><a class='dropdown-item' href='logout.php'>LogOut</a></li>";
                         } else {
                             echo "<li><a class='dropdown-item' href='login.php'>Sign In</a></li>";
@@ -271,7 +279,7 @@ if (!isset($_SESSION['user'])) {
                     echo '                </div>';
                     if ($row['state'] !== "delivered") {
                         echo '                <div>';
-                        echo '                    <a href=""><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
+                        echo '                    <a href="deleteorder.php?oid='.$row['oid'].'"><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
                         echo '                </div>';
                     }
                     echo '            </div>';
@@ -312,7 +320,7 @@ if (!isset($_SESSION['user'])) {
                     echo '            <div class="exchange">';
                     echo '                <span>Exchange/Return is available till ' . $row['exchangedate'] . '</span>';
                     echo '                <a href="">';
-                    echo '                    <h6><b>Return</b></h6>';
+                    echo '                    <h6><b>Exchange/Return</b></h6>';
                     echo '                </a>';
                     echo '            </div>';
 

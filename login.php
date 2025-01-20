@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-direction: column;
             align-items: center;
             color: white;
-            margin-bottom:200px ;
+            margin-bottom: 200px;
         }
 
         .login-form h2 {
@@ -158,11 +158,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end profile">
                         <?php
                         if (isset($_SESSION['user'])) {
                             $username = $_SESSION['user'];
-                            echo "<li><a class='dropdown-item' href='profile.php'>$username</a></li>";
+
+                            echo "<h4 class='text-center'>Welcome $username !</h4>";
+                            echo "<li><a class='dropdown-item' href='profile.php'>Profile</a></li>";
+                            echo "<li><a class='dropdown-item' href='orders.php'>Orders</a></li>";
                             echo "<li><a class='dropdown-item' href='logout.php'>LogOut</a></li>";
                         } else {
                             echo "<li><a class='dropdown-item' href='registration.php'>Sign Up</a></li>";

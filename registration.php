@@ -55,9 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error[] = $sql->error;
         } else {
             //creating cart for each individual user dynamically
-            $cartname = $username."_cart";
+            $cartname = $username . "_cart";
 
-            $createcart = $con->prepare("CREATE TABLE `".$cartname."`(pid int NOT NULL,quantity int DEFAULT 1,size varchar(10) DEFAULT 'M',FOREIGN KEY (pid) REFERENCES product_info(id))");
+            $createcart = $con->prepare("CREATE TABLE `" . $cartname . "`(pid int NOT NULL,quantity int DEFAULT 1,size varchar(10) DEFAULT 'M',FOREIGN KEY (pid) REFERENCES product_info(id))");
             $createcart->execute();
             $createcart->close();
 
@@ -113,6 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             min-width: 90px;
             /* Optional: control the width */
             padding: 5px 0;
+        }
+
+        .profile{
+            min-width: 300px;
         }
 
         body {
@@ -198,11 +202,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end profile">
                         <?php
                         if (isset($_SESSION['user'])) {
                             $username = $_SESSION['user'];
-                            echo "<li><a class='dropdown-item' href='profile.php'>$username</a></li>";
+
+                            echo "<h4 class='text-center'>Welcome $username !</h4>";
+                            echo "<li><a class='dropdown-item' href='profile.php'>Profile</a></li>";
+                            echo "<li><a class='dropdown-item' href='orders.php'>Orders</a></li>";
                             echo "<li><a class='dropdown-item' href='logout.php'>LogOut</a></li>";
                         } else {
                             echo "<li><a class='dropdown-item' href='login.php'>Sign In</a></li>";
@@ -256,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <?php
-        include 'footer.html';
+    include 'footer.html';
     ?>
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
