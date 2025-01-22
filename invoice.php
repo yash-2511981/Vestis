@@ -276,4 +276,4 @@ $height = "";
 
 $dompdf->setPaper('A7', 'portrait');
 $dompdf->render();
-$dompdf->stream('invoice.pdf', ['0','0',$width=> 0,'Attachment'=>0]);
+$dompdf->stream('invoice.pdf', ['0','0',$width=> 0]);

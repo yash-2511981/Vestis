@@ -121,6 +121,13 @@ if (!isset($_SESSION['user'])) {
             margin: 0;
         }
 
+        #date,
+        #desc,
+        #size,
+        #payment {
+            font-size: 13px;
+        }
+
         .order .product {
             height: 110px;
             width: 100%;
@@ -261,79 +268,81 @@ if (!isset($_SESSION['user'])) {
                 while ($row = $orders->fetch_assoc()) {
 
                     // Start a new form for each order
+                    if ($row['state'] != 'delivered') {
 
-                    // Each order inside a col-6 (half width) column
-                    echo '    <div class="col-md-6 mb-4">'; // Use col-md-6 for two orders in one row
-                    echo '      <form action="" method="post">';
+                        // Each order inside a col-6 (half width) column
+                        echo '    <div class="col-md-6 mb-4">'; // Use col-md-6 for two orders in one row
+                        echo '      <form action="" method="post">';
 
-                    echo '        <div class="order">';
-                    echo '            <div class="status">';
-                    echo '                <div class="status-inside">';
-                    echo '                    <div class="status-img">';
-                    echo '                        <img src="./images/projectImages/svg/cube.svg" alt="">';
-                    echo '                    </div>';
-                    echo '                    <div class="order-status">';
-                    echo '                        <h6><b>Order is ' . $row['state'] . '</b></h6>';
-                    echo '                        <span id="date">Expected Delivery till ' . $row['delivery_date'] . '</span>';
-                    echo '                    </div>';
-                    echo '                </div>';
-                    if ($row['state'] !== "delivered") {
-                        echo '                <div>';
-                        echo '                    <a href="deleteorder.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
+                        echo '        <div class="order">';
+                        echo '            <div class="status">';
+                        echo '                <div class="status-inside">';
+                        echo '                    <div class="status-img">';
+                        echo '                        <img src="./images/projectImages/svg/cube.svg" alt="">';
+                        echo '                    </div>';
+                        echo '                    <div class="order-status">';
+                        echo '                        <h6><b>Order is ' . $row['state'] . '</b></h6>';
+                        echo '                        <span id="date">Expected Delivery till ' . $row['delivery_date'] . '</span>';
+                        echo '                    </div>';
                         echo '                </div>';
-                    }
-                    echo '            </div>';
+                        if ($row['state'] !== "delivered") {
+                            echo '                <div>';
+                            echo '                    <a href="deleteorder.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
+                            echo '                </div>';
+                        }
+                        echo '            </div>';
 
-                    // Product information
-                    echo '            <div class="product">';
-                    echo '                <div class="pimg">';
-                    echo '                    <img src="./admin/productsimages/' . $row['img'] . '" alt="" width="100px" height="100px" class="rounded">';
-                    echo '                </div>';
-                    echo '                <div class="pdetails">';
-                    echo '                    <h6><b>' . $row['name'] . '</b></h6>';
-                    echo '                    <span>' . $row['description'] . '</span>';
-                    echo '                    <span>' . $row['size'] . '</span>';
-                    echo '                    <span>Payment is ' . $row['paystate'] . '</span>';
-                    echo '                </div>';
-
-                    if ($row['paystate'] == "done") {
-                        echo '                <div class="invoice">';
-                        echo '                    <a href="invoice.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
+                        // Product information
+                        echo '            <div class="product">';
+                        echo '                <div class="pimg">';
+                        echo '                    <img src="./admin/productsimages/' . $row['img'] . '" alt="" width="100px" height="100px" class="rounded">';
                         echo '                </div>';
-                    }
-                    echo '            </div>';
-
-                    // Review section for delivered orders
-                    if ($row['state'] == "delivered") {
-                        echo '            <div class="review">';
-                        echo '                <div>';
-                        echo '                    <label for="review">Add Rating :</label>';
-                        echo '                    <input type="number" name="review" id="review" min="1" max="5" step="1">';
+                        echo '                <div class="pdetails">';
+                        echo '                    <h6><b>' . $row['name'] . '</b></h6>';
+                        echo '                    <span id="desc">' . $row['description'] . '</span>';
+                        echo '                    <span id="size">' . $row['size'] . '</span>';
+                        echo '                    <span id="payment">Payment is ' . $row['paystate'] . '</span>';
                         echo '                </div>';
+
+                        if ($row['paystate'] == "done") {
+                            echo '                <div class="invoice">';
+                            echo '                    <a href="invoice.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
+                            echo '                </div>';
+                        }
+                        echo '            </div>';
+
+                        // Review section for delivered orders
+                        if ($row['state'] == "delivered") {
+                            echo '            <div class="review">';
+                            echo '                <div>';
+                            echo '                    <label for="review">Add Rating :</label>';
+                            echo '                    <input type="number" name="review" id="review" min="1" max="5" step="1">';
+                            echo '                </div>';
+                            echo '                <a href="">';
+                            echo '                    <h6><b>Add Review</b></h6>';
+                            echo '                </a>';
+                            echo '            </div>';
+                        }
+
+                        // Exchange/Refund info
+                        echo '            <div class="exchange">';
+                        echo '                <span>Exchange/Return is available till ' . $row['exchangedate'] . '</span>';
                         echo '                <a href="">';
-                        echo '                    <h6><b>Add Review</b></h6>';
+                        echo '                    <h6><b>Exchange/Return</b></h6>';
                         echo '                </a>';
                         echo '            </div>';
-                    }
 
-                    // Exchange/Refund info
-                    echo '            <div class="exchange">';
-                    echo '                <span>Exchange/Return is available till ' . $row['exchangedate'] . '</span>';
-                    echo '                <a href="">';
-                    echo '                    <h6><b>Exchange/Return</b></h6>';
-                    echo '                </a>';
-                    echo '            </div>';
+                        echo '        </div>';
+                        echo '      </form>';
+                        echo '    </div>'; // Close the col-6 div
 
-                    echo '        </div>';
-                    echo '      </form>';
-                    echo '    </div>'; // Close the col-6 div
+                        // Increase the counter
+                        $count++;
 
-                    // Increase the counter
-                    $count++;
-
-                    // After every 2 items, close the current row and start a new one
-                    if ($count % 2 == 0) {
-                        echo '</div><div class="row justify-content-between align-items-center g-2 my-5">'; // Start a new row after 2 orders
+                        // After every 2 items, close the current row and start a new one
+                        if ($count % 2 == 0) {
+                            echo '</div><div class="row justify-content-between align-items-center g-2 my-5">'; // Start a new row after 2 orders
+                        }
                     }
                 }
             }
