@@ -67,7 +67,7 @@ if (!isset($_SESSION['user'])) {
             padding: 5px 0;
         }
 
-        .profile{
+        .profile {
             min-width: 300px;
         }
 
@@ -193,7 +193,7 @@ if (!isset($_SESSION['user'])) {
             align-items: center;
             justify-content: space-between;
             padding: 10px;
-            margin-top:10px ;
+            margin-top: 10px;
         }
     </style>
 
@@ -279,7 +279,7 @@ if (!isset($_SESSION['user'])) {
                     echo '                </div>';
                     if ($row['state'] !== "delivered") {
                         echo '                <div>';
-                        echo '                    <a href="deleteorder.php?oid='.$row['oid'].'"><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
+                        echo '                    <a href="deleteorder.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/cancel.svg" alt="" id="cancel"></a>';
                         echo '                </div>';
                     }
                     echo '            </div>';
@@ -298,7 +298,7 @@ if (!isset($_SESSION['user'])) {
 
                     if ($row['paystate'] == "done") {
                         echo '                <div class="invoice">';
-                        echo '                    <a href=""><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
+                        echo '                    <a href="invoice.php?oid=' . $row['oid'] . '"><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
                         echo '                </div>';
                     }
                     echo '            </div>';
