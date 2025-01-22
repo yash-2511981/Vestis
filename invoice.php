@@ -1,9 +1,27 @@
 <?php
+include 'db.php';
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header("location:login.php");
+}
+
 require_once './dompdf/autoload.inc.php';
+
 
 use Dompdf\Dompdf;
 
-$html = '
+if (!empty($_GET['oid'])) {
+    $orderid = $_GET['oid'];
+    $getinvoice = $con->prepare("SELECT * FROM invoice i INNER JOIN orders_info o ON i.oid =o.oid WHERE i.oid = ?");
+    $getinvoice->bind_param("i", $orderid);
+    if ($getinvoice->execute()) {
+
+        $res = $getinvoice->get_result();
+        if ($res->num_rows > 0) {
+
+            $row = $res->fetch_assoc();
+            $html = '
 <!DOCTYPE html>
 <html lang="en">
 
@@ -157,12 +175,12 @@ $html = '
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="width: 50%; text-align: left; padding: 5px;">
-                <p><b>Invoice No:</b> 12455876</p>
-                <p><b>Date:</b> 12-12-12 00:00:00</p>
+                <p><b>Invoice No:</b>' . $row['invoiceId'] . '</p>
+                <p><b>Date:</b>' . $row['date'] . '</p>
             </td>
             <td style="width: 50%; text-align: right; padding: 5px;">
-                <p><b>Customer Id:</b> 121545665</p>
-                <p><b>Mobile No:</b> 8788064485</p>
+                <p><b>Customer Name:</b>' . $_SESSION['user'] . '</p>
+                <p><b>Mobile No:</b>' . $row['contact'] . '</p>
             </td>
         </tr>
     </table>
@@ -186,11 +204,11 @@ $html = '
     <!-- Table Body -->
     <tbody>
         <tr>
-            <td style="text-align: left; padding: 5px;">10215451505102</td>
-            <td style="text-align: right; padding: 5px;">Rs. 699.00</td>
-            <td style="text-align: right; padding: 5px;">1</td>
-            <td style="text-align: right; padding: 5px;">Rs. 0.00</td>
-            <td style="text-align: right; padding: 5px;">Rs. 699.00</td>
+            <td style="text-align: left; padding: 5px;">' . $row['pid'] . '</td>
+            <td style="text-align: right; padding: 5px;">' . $row['amt'] . '</td>
+            <td style="text-align: right; padding: 5px;">' . $row['quantity'] . '</td>
+            <td style="text-align: right; padding: 5px;">Rs.0.00</td>
+            <td style="text-align: right; padding: 5px;">' . $row['amt'] . '</td>
         </tr>
         <tr>
             <td style="text-align: left; padding: 5px;" colspan="4"><b>Mens Sweat Shirt</b></td>
@@ -206,11 +224,11 @@ $html = '
 <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
     <tr>
         <td style="width: 75%; text-align: left; padding: 8px; font-weight: bold;">Gross Total:</td>
-        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">Rs. 699.00</td>
+        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">' . $row['amt'] . '</td>
     </tr>
     <tr>
         <td style="width: 75%; text-align: left; padding: 8px; font-weight: bold;">Total Invoice Amt:</td>
-        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">Rs. 699.00</td>
+        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">' . $row['amt'] . '</td>
     </tr>
 </table>
 
@@ -234,10 +252,10 @@ $html = '
                 <tr>
                     <td>A)</td>
                     <td>665.00</td>
-                    <td>16.64</td>
-                    <td>16.64</td>
+                    <td>' . ($row['amt'] * 0.18) . '</td>
+                    <td>' . ($row['amt'] * 0.18) . '</td>
                     <td>0.00</td>
-                    <td>699.00</td>
+                    <td>' . $row['amt'] . '</td>
                 </tr>
             </tbody>
         </table>
@@ -248,7 +266,7 @@ $html = '
 <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
     <tr>
         <td style="width: 75%; text-align: left; padding: 8px; font-weight: bold;">TOTAL RECEIVED AMOUNT:</td>
-        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">Rs. 699.00</td>
+        <td style="width: 25%; text-align: right; padding: 8px; font-weight: bold;">' . $row['amt'] . '</td>
     </tr>
 </table>
 
@@ -269,11 +287,14 @@ $html = '
 
     ';
 
-$dompdf = new Dompdf();
-$dompdf->loadHtml($html);
-$width = 300;
-$height = "";
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $width = 300;
+            $height = "";
 
-$dompdf->setPaper('A7', 'portrait');
-$dompdf->render();
-$dompdf->stream('invoice.pdf', ['0','0',$width=> 0]);
+            $dompdf->setPaper('A5', 'portrait');
+            $dompdf->render();
+            $dompdf->stream('invoice.pdf', ['0', '0', $width => 0, 'Attachment' => 0]);
+        }
+    }
+}
