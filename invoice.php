@@ -13,7 +13,9 @@ use Dompdf\Dompdf;
 
 if (!empty($_GET['oid'])) {
     $orderid = $_GET['oid'];
-    $getinvoice = $con->prepare("SELECT * FROM invoice i INNER JOIN orders_info o ON i.oid =o.oid WHERE i.oid = ?");
+    $getinvoice = $con->prepare("SELECT * FROM invoice i INNER JOIN orders_info o ON i.oid =o.oid
+                                        INNER JOIN product_info p on o.pid = p.id 
+                                         WHERE i.oid = ?");
     $getinvoice->bind_param("i", $orderid);
     if ($getinvoice->execute()) {
 
@@ -41,7 +43,7 @@ if (!empty($_GET['oid'])) {
 
         /* Set the page size for A4 portrait */
         @page {
-            size: A5 portrait;
+            size: A4 portrait;
             padding : 0 10px;
         }
 
@@ -211,8 +213,8 @@ if (!empty($_GET['oid'])) {
             <td style="text-align: right; padding: 5px;">' . $row['amt'] . '</td>
         </tr>
         <tr>
-            <td style="text-align: left; padding: 5px;" colspan="4"><b>Mens Sweat Shirt</b></td>
-            <td style="text-align: right; padding: 5px;">Rs. 665.00</td>
+            <td style="text-align: left; padding: 5px;" colspan="4"><b>'.$row['description'].'</b></td>
+            <td style="text-align: right; padding: 5px;">Rs.'.$row['price'].'</td>
         </tr>
     </tbody>
 </table>
@@ -251,9 +253,9 @@ if (!empty($_GET['oid'])) {
             <tbody>
                 <tr>
                     <td>A)</td>
-                    <td>665.00</td>
-                    <td>' . ($row['amt'] * 0.18) . '</td>
-                    <td>' . ($row['amt'] * 0.18) . '</td>
+                    <td>'.$row['price'].'</td>
+                    <td>' . ($row['price'] * 0.10) . '</td>
+                    <td>' . ($row['price'] * 0.10) . '</td>
                     <td>0.00</td>
                     <td>' . $row['amt'] . '</td>
                 </tr>
@@ -294,7 +296,7 @@ if (!empty($_GET['oid'])) {
 
             $dompdf->setPaper('A5', 'portrait');
             $dompdf->render();
-            $dompdf->stream('invoice.pdf', ['0', '0', $width => 0, 'Attachment' => 0]);
+            $dompdf->stream('invoice.pdf', ['0', '0', 'Attachment' => 0]);
         }
     }
 }
