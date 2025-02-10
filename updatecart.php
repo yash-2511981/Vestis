@@ -11,12 +11,10 @@ if (empty($_SESSION['user'])) {
         $size = $_POST['size'];
         if (!empty($newquant) && !empty($size)) {
             echo "hi";
-            $cartname = $_SESSION['user'] . "_cart";
-
-
+    
             //updating the product quantity and size
-            $updtquantity = $con->prepare("UPDATE `" . $cartname . "` set quantity=?,size=? WHERE pid = ?");
-            $updtquantity->bind_param("isi", $newquant, $size, $_GET['pid']);
+            $updtquantity = $con->prepare("UPDATE cart set quantity=?,size=? WHERE pid = ? AND uid = ?");
+            $updtquantity->bind_param("isii", $newquant, $size, $_GET['pid'],$_SESSION['uid']);
 
 
             if ($updtquantity->execute()) {

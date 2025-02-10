@@ -230,8 +230,8 @@ include 'db.php';
                 </div>
                 <?php
                 if (isset($_SESSION['user'])) {
-                    $tablename = $_SESSION['user'] . "_cart";
-                    $sql = $con->prepare("SELECT COUNT(*) AS count FROM `" . $tablename . "`");
+                    $sql = $con->prepare("SELECT COUNT(*) AS count FROM cart WHERE uid = ?");
+                    $sql->bind_param('i',$_SESSION['uid']);
                     $sql->execute();
                     $res = $sql->get_result();
                     $cartItem = $res->fetch_assoc();

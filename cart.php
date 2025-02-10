@@ -113,10 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container my-5 cart">
             <?php
             $carttotal = 0;
-            $cartname = $_SESSION['user'] . "_cart";
             $orders = [];
-            $sql = "SELECT p.*,c.pid,c.quantity,c.size FROM product_info p JOIN `" . $cartname . "` c ON p.id = c.pid";
+            $sql = "SELECT p.*,c.pid,c.quantity,c.size FROM product_info p JOIN cart c ON p.id = c.pid WHERE uid = ?";
             $cartitems = $con->prepare($sql);
+            $cartitems->bind_param('i',$_SESSION['uid']);
             $cartitems->execute();
             $res = $cartitems->get_result();
 
