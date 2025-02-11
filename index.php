@@ -264,17 +264,20 @@ include 'db.php';
         </div>
     </header>
     <main>
-        <div class="container container-fluid  main">
+        <div class="container main">
             <h1>Best Deals Of The Week</h1>
 
             <div class="container products my-5">
                 <?php
 
+
                 $sql = "SELECT * FROM product_info LIMIT 8";
                 
+                //filtering based on the brand name
                 if (!empty($_GET['brand_name'])) {
                     $sql = "SELECT * FROM product_info WHERE brand = ?";
                 }
+                //filtering based on the category
                 if (!empty($_GET['category'])) {
                     $sql = "SELECT * FROM product_info WHERE category = ?";
                 }

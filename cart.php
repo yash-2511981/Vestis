@@ -65,8 +65,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0px 0px 50px black;
         }
 
-        .profile{
+        .profile {
             min-width: 300px;
+        }
+
+        #cart {
+            position: relative;
+            height: 50px;
+            width: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        #cartlogo {
+            height: 38px;
+            width: 38px;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: 37%;
+            /* Adjust to bring it closer to the corner */
+            right: 23%;
+            /* Adjust to bring it closer to the corner */
+            height: 22px;
+            /* Adjust size of the count badge */
+            width: 22px;
+            /* Adjust size of the count badge */
+            background-color: transparent;
+            /* Green color for the badge */
+            border-radius: 50%;
+            /* Circular badge */
+            color: white;
+            /* White text color */
+            font-size: 12px;
+            /* Font size to fit inside the badge */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
@@ -74,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <header>
         <div class="header">
-            <nav class="navbar navbar-expand-sm navbar-dark ">
+            <nav class="navbar navbar-expand-sm navbar-dark">
                 <a class="navbar-brand mx-5" href="index.php"><img src="images/projectImages/logo.png"
                         class="img-fluid rounded" alt="" height="60px" width="60px" /></a>
                 <div class="container mx-0">
@@ -85,8 +123,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <span class="visually-hidden">(current)</span></a>
                             </li>
                         </ul>
+                        <form class="d-flex my-2 my-lg-0">
+                            <input class="form-control me-sm-2" type="text" placeholder="Search" />
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                                Search
+                            </button>
+                        </form>
                     </div>
                 </div>
+                <?php
+                if (isset($_SESSION['user'])) {
+                    $sql = $con->prepare("SELECT COUNT(*) AS count FROM cart WHERE uid = ?");
+                    $sql->bind_param('i', $_SESSION['uid']);
+                    $sql->execute();
+                    $res = $sql->get_result();
+                    $cartItem = $res->fetch_assoc();
+
+                    echo '<a href="cart.php" id="cart"><span id="cart-count">' . $cartItem['count'] . '</span><img src="./images/projectImages/svg/cart.svg" alt="" id="cartlogo"></a>';
+                }
+                ?>
                 <div class="dropdown userlogo">
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="images/projectImages/user.png" alt="" height="35px" width="35px">
@@ -107,7 +162,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </ul>
                 </div>
             </nav>
-            <h1>Shopping Cart</h1>
+
+            <h1>Your Cart!</h1>
+        </div>
     </header>
     <main>
         <div class="container my-5 cart">
@@ -116,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $orders = [];
             $sql = "SELECT p.*,c.pid,c.quantity,c.size FROM product_info p JOIN cart c ON p.id = c.pid WHERE uid = ?";
             $cartitems = $con->prepare($sql);
-            $cartitems->bind_param('i',$_SESSION['uid']);
+            $cartitems->bind_param('i', $_SESSION['uid']);
             $cartitems->execute();
             $res = $cartitems->get_result();
 

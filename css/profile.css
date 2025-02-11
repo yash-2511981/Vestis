@@ -1,0 +1,151 @@
+body {
+    overflow-x: hidden;
+    background-color: rgb(38, 38, 38);
+}
+
+.userlogo button {
+    height: 60px;
+    width: 60px;
+    background: transparent;
+    border: none;
+}
+
+.userlogo ul {
+    width: auto;
+    height: auto;
+}
+
+.header {
+    position: relative;
+    height: 250px;
+    width: auto;
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-image: url("../images/projectImages/nvbg2.jpg");
+    background-size: cover;
+    background-position: center 30%;
+    z-index: -1;
+
+}
+
+.header h1 {
+    text-align: center;
+    color: white;
+    font-weight: bolder;
+    font-size: 50px;
+    font-family: 'Rubik Vinyl', cursive;
+}
+
+.dropdown-menu {
+    min-width: 100px;
+    /* Optional: control the width */
+    padding: 5px 0;
+}
+
+.profile {
+    min-width: 300px;
+}
+
+.main h1 {
+    font-weight: bolder;
+    text-align: center;
+    margin: 15px 0;
+    color: darkgrey;
+    text-shadow: 3px 3px 5px grey;
+}
+
+.products {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.main .product {
+    height: 330px;
+    width: 240px;
+    border: none;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    background-color: transparent;
+    word-wrap: break-word;
+}
+
+.product img {
+    border-radius: 15px;
+    height: 250px;
+    width: 230px;
+    box-shadow: 0 0 60px black;
+
+}
+
+.product span {
+    color: darkgrey;
+}
+
+.product #pname {
+    font-weight: bolder;
+    font-size: 17px;
+    margin: 20px 0 1px 5px;
+}
+
+#pname #desc {
+    font-size: 13px;
+    font-weight: normal;
+    margin: 1px 0 4px 5px;
+}
+
+.product #price {
+    font-weight: bold;
+    font-size: 15px;
+    margin: 1px 0 1px 5px;
+}
+
+#cart {
+    position: relative;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+#cartlogo {
+    height: 38px;
+    width: 38px;
+}
+
+#cart-count {
+    position: absolute;
+    top: 37%;
+    /* Adjust to bring it closer to the corner */
+    right: 23%;
+    /* Adjust to bring it closer to the corner */
+    height: 22px;
+    /* Adjust size of the count badge */
+    width: 22px;
+    /* Adjust size of the count badge */
+    background-color: transparent;
+    /* Green color for the badge */
+    border-radius: 50%;
+    /* Circular badge */
+    color: white;
+    /* White text color */
+    font-size: 12px;
+    /* Font size to fit inside the badge */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

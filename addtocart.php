@@ -36,16 +36,7 @@
                         echo $updtquantity->error;
                     }
                 }
-            } else {
-                //if there is no product is matched with given id then new product is inserted
-                $insertItem = $con->prepare("INSERT INTO cart (pid,uid) VALUES (?,?)");
-                $insertItem->bind_param("ii", $_GET['id'],$_SESSION['uid']);
-                if ($insertItem->execute()) {
-                    header("Location:index.php");
-                } else {
-                    echo $updtquantity->error;
-                }
-            }
+            } 
         }
     }
 
