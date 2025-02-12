@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($username == $res['username'] && $pass == $res['password']) {
                 $_SESSION['user'] = $username;
                 $_SESSION['uid'] = $res['id'];
-                $_SESSION['ucontact'] = $res['contact'];
                 $_SESSION['uemail'] = $res['email'];
+                $_SESSION['ucontact'] = $res['contact'];
                 header('Location:index.php');
             } else {
                 $error[] = "enter valid username and password";

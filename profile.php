@@ -36,7 +36,7 @@ if (!isset($_SESSION['user'])) {
 
         }
 
-        .profile{
+        .profile {
             border-radius: 10px 10px 10px 10px;
             transition: border-radius 0.3s ease;
             background-color: black;
@@ -45,12 +45,12 @@ if (!isset($_SESSION['user'])) {
 
         .update {
             border-radius: 10px;
-            transition: opacity 0.2s ease,max-height 0.5s ease;
+            transition: opacity 0.2s ease, max-height 0.5s ease;
             max-height: 0;
             opacity: 0;
         }
 
-        .update-active{
+        .update-active {
             max-height: 500px;
             opacity: 1;
         }
@@ -73,6 +73,26 @@ if (!isset($_SESSION['user'])) {
         .update input:focus {
             border-bottom-color: #4A90E2;
         }
+
+        .update .toggle-pass{
+            display: flex;
+            position: relative;
+            align-items: center;
+            width: 100%;
+        }
+
+        #pass{
+            padding-right: 40px;
+        }
+
+        #pass-toggle{
+            position: absolute; 
+            right: 95px;
+            top: -5px;
+            transform: translate(-50%);
+            cursor: pointer;
+        }
+
     </style>
 
 </head>
@@ -145,7 +165,10 @@ if (!isset($_SESSION['user'])) {
                             <img src="./images/projectImages/logo1.png" alt="" class="image rounded-circle bordered" height="70px" width="70px">
                         </div>
                         <div class="name ms-3 d-flex flex-column align-items-start">
-                            <p class="m-1"><b>Hi!</b> Yash</p>
+                            <?php
+                            echo '<p class="m-1"><b>Hi! </b>' . $_SESSION['user'] . '</p>';
+                            ?>
+
                         </div>
                     </div>
                     <div class="toggle-update-btn ms-3 mb-1">
@@ -155,42 +178,72 @@ if (!isset($_SESSION['user'])) {
 
                 <!-- form for update profile -->
                 <div class="update col-9 d-flex flex-column bg-black">
-                    <form method="post">
+                    <form method="post" action="./updateprofile.php">
                         <div class="row justify-content-between align-items-center g-2 my-2 ">
+
+                            <?php
+                            $getuserinfo = $con->prepare("SELECT * FROM user_info WHERE id=?");
+                            $getuserinfo->bind_param('s', $_SESSION['uid']);
+                            $getuserinfo->execute();
+
+                            $res = $getuserinfo->get_result();
+                            $row = $res->fetch_assoc();
+
+                            echo '     
                             <div class="col-6 d-flex flex-column align-items-start">
                                 <label for="name">Name:</label>
-                                <input type="text" name="name" id="name">
+                                <input type="text" name="name" id="name" value="' . $row['name'] . '">
                                 <label for="email">Email:</label>
-                                <input type="text" name="email" id="email">
+                                <input type="text" name="email" id="email" value="' . $row['email'] . '">
                             </div>
                             <div class="col-6 d-flex flex-column align-items-start">
                                 <label for="contact">Contact No:</label>
-                                <input type="text" name="contact" id="contact">
-                                <label for="address">Address:</label>
-                                <input type="text" name="address" id="address">
-                            </div>
+                                <input type="text" name="contact" id="contact" value="' . $row['contact'] . '">
+                                <label for="pass">Password:</label>
+                                    <div class="toggle-pass">
+                                        <input type="password" name="pass" id="pass" value="' . $row['password'] . '">  
+                                        <img src="./images/projectImages/svg/text.svg" alt="" height="30px" width="30px" id="pass-toggle">
+                                    </div>
+                            </div>';
+                            ?>
                         </div>
                         <div class="d-flex justify-content-end mt-auto">
                             <button id="update-profile" class="btn btn-outline-success m-3">Update Profile</button>
                         </div>
+
+
                     </form>
                 </div>
             </div>
 
             <script>
-                document.addEventListener('DOMContentLoaded',()=>{
-                    const profile =document.querySelector('.profile');
-                    const updatewnd =document.querySelector('.update');
-                    const dropdown =document.getElementById('down');
+                document.addEventListener('DOMContentLoaded', () => {
+                    const profile = document.querySelector('.profile');
+                    const updatewnd = document.querySelector('.update');
+                    const dropdown = document.getElementById('down');
+                    const passwordField = document.getElementById('pass');
+                    const eyebtn =document.getElementById('pass-toggle');
+                    const update = document.getElementById('update-profile');
+                    const notify = document.getElementById('notify');
 
-                    dropdown.addEventListener('click',()=>{
+                    dropdown.addEventListener('click', () => {
                         profile.classList.toggle('profile-update');
                         updatewnd.classList.toggle('update-active');
 
-                        if(updatewnd.classList.contains('update-active')){
+                        if (updatewnd.classList.contains('update-active')) {
                             dropdown.src = "./images/projectImages/svg/up.svg"
-                        }else{
+                        } else {
                             dropdown.src = "./images/projectImages/svg/down.svg"
+                        }
+                    })
+
+                    eyebtn.addEventListener('click',()=>{
+                        if(passwordField.type === 'password'){
+                            passwordField.type = "text";
+                            eyebtn.src = "./images/projectImages/svg/pass.svg"
+                        }else{
+                            passwordField.type = "password";
+                            eyebtn.src = "./images/projectImages/svg/text.svg"
                         }
                     })
                 })
@@ -199,7 +252,8 @@ if (!isset($_SESSION['user'])) {
             <!-- purchased histroy -->
             <div class="row justify-content-center align-items-center g-2">
                 <div class="col-12 ">
-
+                    <?php
+                    ?>
                 </div>
             </div>
 

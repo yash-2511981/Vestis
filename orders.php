@@ -159,11 +159,13 @@ if (!isset($_SESSION['user'])) {
             height: 100%;
             display: flex;
             align-items: end;
+            margin-right: -14px;
         }
 
         .invoice a {
             text-decoration-line: none;
             color: red;
+            
         }
 
         .invoice #bill {

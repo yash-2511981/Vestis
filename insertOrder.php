@@ -24,7 +24,8 @@ if (empty($_SESSION['user'])) {
     }
 
     if (count($finalOrders) == $count) {
-        $emptycart = $con->prepare("TRUNCATE TABLE `" . $_SESSION['user'] . "_cart`");
+        $emptycart = $con->prepare("DELETE FROM cart WHERE uid = ?");
+        $emptycart->bind_param('i',$_SESSION['uid']);
         if ($emptycart->execute()) {
             header("location:orders.php");
         }
