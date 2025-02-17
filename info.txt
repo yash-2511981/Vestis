@@ -41,3 +41,7 @@ Item Packaged and Shipped (Shipped)
 Item Out for Delivery (Out for Delivery)
 Item Delivered (Delivered)
 Order Completed (Completed)
+
+
+purchased history query 
+select p.name,p.description,p.img,o.amt,o.order_date from orders_info o inner join product_info p on o.pid = p.id where order_status = (select sid from status where state = 'delivered');

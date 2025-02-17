@@ -36,7 +36,7 @@ if (!isset($_SESSION['user'])) {
 
         }
 
-        .profile {
+        .user-profile {
             border-radius: 10px 10px 10px 10px;
             transition: border-radius 0.3s ease;
             background-color: black;
@@ -74,25 +74,28 @@ if (!isset($_SESSION['user'])) {
             border-bottom-color: #4A90E2;
         }
 
-        .update .toggle-pass{
+        .update .toggle-pass {
             display: flex;
             position: relative;
             align-items: center;
             width: 100%;
         }
 
-        #pass{
+        #pass {
             padding-right: 40px;
         }
 
-        #pass-toggle{
-            position: absolute; 
+        #pass-toggle {
+            position: absolute;
             right: 95px;
             top: -5px;
             transform: translate(-50%);
             cursor: pointer;
         }
 
+        .order {
+            margin-bottom: 10px;
+        }
     </style>
 
 </head>
@@ -150,7 +153,6 @@ if (!isset($_SESSION['user'])) {
                     </ul>
                 </div>
             </nav>
-
             <h1>Your Profile!</h1>
         </div>
     </header>
@@ -159,7 +161,7 @@ if (!isset($_SESSION['user'])) {
 
             <!-- profile summary -->
             <div class="row justify-content-center align-items-center my-5">
-                <div class="col-9 card d-flex flex-row align-items-center justify-content-between profile">
+                <div class="col-9 card d-flex flex-row align-items-center justify-content-between user-profile">
                     <div class="card-header d-flex flex-row align-items-center">
                         <div class="profilepic">
                             <img src="./images/projectImages/logo1.png" alt="" class="image rounded-circle bordered" height="70px" width="70px">
@@ -210,19 +212,75 @@ if (!isset($_SESSION['user'])) {
                         <div class="d-flex justify-content-end mt-auto">
                             <button id="update-profile" class="btn btn-outline-success m-3">Update Profile</button>
                         </div>
-
-
                     </form>
                 </div>
+
+                <!-- purchased histroy -->
+
+                <div class="col-9 my-5 text-light">
+                    <div class="row card-header bg-dark rounded p-1 ps-2 mb-4 bg-dark rounded">
+                        <h3 class="my-3"><b>Purchased History</b></h3>
+                    </div>
+                    <div class="row align-items-center rounded bg-black">
+                        <div class="col-4 text-center py-2"><b>Product Details</b></div>
+                        <div class="col-2 text-center py-2"><b>Delivery Date</b></div>
+                        <div class="col-2 text-center py-2"><b>Exchange</b></div>
+                        <div class="col-2 text-center py-2"><b>Review</b></div>
+                        <div class="col-2 text-center py-2"><b>Bill & Review</b></div>
+                    </div>
+
+                    <?php
+                    $state = 'delivered';
+                    $deliveritem = $con->prepare("SELECT p.name,p.description,p.img,o.amt,o.delivery_date,o.oid FROM orders_info o INNER JOIN product_info p ON o.pid = p.id WHERE order_status = (SELECT sid FROM status WHERE state = ?)");
+                    $deliveritem->bind_param('s', $state);
+                    if ($deliveritem->execute()) {
+                        $p = $deliveritem->get_result();
+
+                        while ($delivery = $p->fetch_assoc()) {
+                            echo '<div class="row justify-content-center align-items-center order my-2 bg-black p-2 rounded">';
+
+                            echo '<div class="col-4 d-flex justify-content-start">';
+                            echo '<img src="./admin/productsImages/'.$delivery['img'].'" alt="" height="80px" width="80px" class="rounded">';
+                            echo '<div class="d-flex flex-column ms-3">';
+                            echo '<p class="m-0"><b>'.$delivery['name'].'</b></p>';
+                            echo '<p class="m-0">('.$delivery['description'].')</p>';
+                            echo '<p class="m-0">'.$delivery['amt'].'</p>';
+                            echo '</div>';
+                            echo '</div>';
+
+                            echo '<div class="col-2 text-center">';
+                            echo '<p>'.$delivery['delivery_date'].'</p>';
+                            echo '</div>';
+
+                            echo '<div class="col-2 text-center">';
+                            echo '<p><b>Exchange/Return not Available</b></p>';
+                            echo '</div>';
+
+                            echo '<div class="col-2 text-center">';
+                            echo '<p><b>Review</b></p>';
+                            echo '</div>';
+
+                            echo '<div class="col-2 text-center">';
+                            echo '<a href="invoice.php?oid=' . $delivery['oid'] . '"><img src="./images/projectImages/svg/receipt.svg" alt=""></a>';
+                            echo '</div>';
+
+                            echo '</div>';
+                        }
+                    }
+                    ?>
+
+                </div>
+
+
             </div>
 
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    const profile = document.querySelector('.profile');
+                    const profile = document.querySelector('.user-profile');
                     const updatewnd = document.querySelector('.update');
                     const dropdown = document.getElementById('down');
                     const passwordField = document.getElementById('pass');
-                    const eyebtn =document.getElementById('pass-toggle');
+                    const eyebtn = document.getElementById('pass-toggle');
                     const update = document.getElementById('update-profile');
                     const notify = document.getElementById('notify');
 
@@ -237,26 +295,17 @@ if (!isset($_SESSION['user'])) {
                         }
                     })
 
-                    eyebtn.addEventListener('click',()=>{
-                        if(passwordField.type === 'password'){
+                    eyebtn.addEventListener('click', () => {
+                        if (passwordField.type === 'password') {
                             passwordField.type = "text";
                             eyebtn.src = "./images/projectImages/svg/pass.svg"
-                        }else{
+                        } else {
                             passwordField.type = "password";
                             eyebtn.src = "./images/projectImages/svg/text.svg"
                         }
                     })
                 })
             </script>
-
-            <!-- purchased histroy -->
-            <div class="row justify-content-center align-items-center g-2">
-                <div class="col-12 ">
-                    <?php
-                    ?>
-                </div>
-            </div>
-
         </div>
     </main>
     <footer>

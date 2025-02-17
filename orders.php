@@ -78,10 +78,11 @@ if (!isset($_SESSION['user'])) {
 
         .orders .order {
             height: auto;
-            width: 85%;
+            width: 75%;
             border-radius: 15px;
             background-color: #282828;
             box-shadow: 0px 0px 50px black;
+            padding: 5px 0 10px 0;
         }
 
         .order .status {
@@ -131,7 +132,7 @@ if (!isset($_SESSION['user'])) {
         .order .product {
             height: 110px;
             width: 100%;
-            padding: 10px 25px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-evenly;
         }
@@ -159,50 +160,12 @@ if (!isset($_SESSION['user'])) {
             height: 100%;
             display: flex;
             align-items: end;
-            margin-right: -14px;
+            margin-right: -4px;
         }
 
         .invoice a {
             text-decoration-line: none;
             color: red;
-            
-        }
-
-        .invoice #bill {
-            visibility: hidden;
-            opacity: 0;
-        }
-
-        .order .review {
-            height: 50px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .review div input {
-            height: auto;
-            width: 50px;
-            border-radius: 10px;
-            border: 1px solid green;
-            text-align: center;
-        }
-
-        .review div label {
-            color: darkgrey;
-        }
-
-        .order .exchange {
-            height: 60px;
-            width: 100%;
-            border-radius: 0 0 15px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            margin-top: 10px;
         }
     </style>
 
@@ -263,7 +226,7 @@ if (!isset($_SESSION['user'])) {
         $fetchorder->bind_param("i", $_SESSION['uid']);
         if ($fetchorder->execute()) {
             $orders = $fetchorder->get_result();
-            echo '<div class="row d-flex justify-content-between align-items-center g-2 my-5">'; // Start the first row
+            echo '<div class="row d-flex justify-cintent-start align-items-center g-2 my-5">'; // Start the first row
 
             if ($orders->num_rows > 0) {
                 $count = 0;
@@ -273,7 +236,7 @@ if (!isset($_SESSION['user'])) {
                     if ($row['state'] != 'delivered') {
 
                         // Each order inside a col-6 (half width) column
-                        echo '    <div class="col-md-6 mb-4">'; // Use col-md-6 for two orders in one row
+                        echo '    <div class="col-md-4 mb-4">'; // Use col-md-6 for two orders in one row
                         echo '      <form action="" method="post">';
 
                         echo '        <div class="order">';
@@ -313,27 +276,6 @@ if (!isset($_SESSION['user'])) {
                         }
                         echo '            </div>';
 
-                        // Review section for delivered orders
-                        if ($row['state'] == "delivered") {
-                            echo '            <div class="review">';
-                            echo '                <div>';
-                            echo '                    <label for="review">Add Rating :</label>';
-                            echo '                    <input type="number" name="review" id="review" min="1" max="5" step="1">';
-                            echo '                </div>';
-                            echo '                <a href="">';
-                            echo '                    <h6><b>Add Review</b></h6>';
-                            echo '                </a>';
-                            echo '            </div>';
-                        }
-
-                        // Exchange/Refund info
-                        echo '            <div class="exchange">';
-                        echo '                <span>Exchange/Return is available till ' . $row['exchangedate'] . '</span>';
-                        echo '                <a href="">';
-                        echo '                    <h6><b>Exchange/Return</b></h6>';
-                        echo '                </a>';
-                        echo '            </div>';
-
                         echo '        </div>';
                         echo '      </form>';
                         echo '    </div>'; // Close the col-6 div
@@ -342,11 +284,17 @@ if (!isset($_SESSION['user'])) {
                         $count++;
 
                         // After every 2 items, close the current row and start a new one
-                        if ($count % 2 == 0) {
-                            echo '</div><div class="row justify-content-between align-items-center g-2 my-5">'; // Start a new row after 2 orders
+                        if ($count % 3 == 0) {
+                            echo '</div><div class="row justify-content-start align-items-center g-2 my-5">'; // Start a new row after 2 orders
                         }
                     }
                 }
+            }else{
+                 //if there is no order is placed then this block of code wil executes
+                 echo '<div class="container my-5 text-center p-5">';
+                 echo    '<h1 class="text-white">Oops! cart is empty.<img src="images/projectImages/svg/dissatisfied.svg" alt="sad face" height="60px" width="60px"></h1>';
+                 echo    '<a href="index.php"><button type="submit" name="continueshopping" class="btn btn-dark btn-outline-success btn-lg">Add New Product </button></a>';
+                 echo '</div>';
             }
 
             echo '</div>'; // Close the last row

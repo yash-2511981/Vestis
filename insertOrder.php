@@ -5,13 +5,13 @@ if (empty($_SESSION['user'])) {
     header('Location:login.php');
 } else {
     $date = new DateTime('now');
-    $orderdate = $date->format("D, d M");
+    $orderdate = $date->format("Y-m-d");
     
     $deliverydate = (clone $date)->modify('+7 days');
     $exchangedate = (clone $date)->modify('+14 days');
 
-    $deliverydate = $deliverydate->format("D, d M");
-    $exchangedate = $exchangedate->format("D, d M");
+    $deliverydate = $deliverydate->format("Y-m-d");
+    $exchangedate = $exchangedate->format("Y-m-d");
 
     $finalOrders = $_SESSION['updatedorders'];
     $count = 0;
